@@ -4,13 +4,14 @@ class Person {
   std::string name;
   int age;
 
- public:
+public:
 
   Person(std::string n, int a);
 
   void print();
 
   virtual ~Person();
+  int Age();
 
 
 

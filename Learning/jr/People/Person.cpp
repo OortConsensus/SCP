@@ -20,3 +20,7 @@ Person::~Person(){
 
 
 }
+
+int Person::Age(){
+  return age;
+}

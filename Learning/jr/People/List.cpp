@@ -17,9 +17,8 @@ List<T>::~List() {
   
 }
 template <class T>
-List<T> List<T>::Tail(){
-
-  return *tl;
+List<T>* List<T>::Tail(){
+  return tl;
 
 }
 
@@ -37,6 +36,21 @@ void List<T>::print() {
     p = p->tl;
     
   }
+
+}
+
+
+template <class T>
+List<T>* List<T>::Filter(bool (*f)(T *a)) {
+  List<T> * p = this;
+  List<T> * ret = new List();
+  while (p->tl != NULL) {
+    if (f((p->item))) {
+      ret = new List(p->item, ret);
+    }
+    p = p->tl;
+  }
+  return ret;
 
 }
 
