@@ -5,7 +5,7 @@ namespace DISTPROJ {
 
   class Node {
     public:
-    Node(uint64_t id, SCP* scp);
+    Node(uint64_t id);
 
 
       /*
@@ -19,14 +19,13 @@ namespace DISTPROJ {
        * getQuorumSet -- given a quorumsethash return the quorum set.
        * putQuorumSet -- store a quorum set.
        */
-    uint64_t getNodeID(){return id}; // Inline function
+    uint64_t getNodeID() { return id; }; // Inline function
 
     protected:
       const uint64_t id; // My node ID.
-      SCP* scp;
       // TODO: Need a cache to map sethashes --> quorumSets
 
-  }
+  };
 
   class LocalNode : public Node {
 
@@ -45,7 +44,7 @@ namespace DISTPROJ {
     private:
       // TODO: Quorum set and its hash should be private.
 
-  }
+  };
 
 }
 
