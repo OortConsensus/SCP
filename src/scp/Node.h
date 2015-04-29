@@ -4,9 +4,8 @@
 namespace DISTPROJ {
 
   class Node {
-    
     public:
-      Node(uint64_t const& ID, SCP* SCP);
+    Node(uint64_t const& id, SCP* scp); // (CR: JR->JH, why are you passing ID by reference rather than by value?)
 
 
       /*
@@ -21,15 +20,16 @@ namespace DISTPROJ {
        * putQuorumSet -- store a quorum set.
        * getNodeID -- return node's ME.
        */
+    uint64_t getNodeID(){return id}; // Inline function
 
     protected:
-      const uint64_t ME; // My node ID.
-      SCP* mySCP;
+      const uint64_t id; // My node ID.
+      SCP* scp;
       // TODO: Need a cache to map sethashes --> quorumSets
 
   }
 
-  class LocalNode : public Node {
+  class LocalNode : public Node { // (CR: JR->JH, what is a localnode for?)
 
     public:
       LocalNode(); // TODO: Take a quorum set and a SCP ptr.
