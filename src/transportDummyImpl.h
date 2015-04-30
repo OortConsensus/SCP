@@ -6,13 +6,14 @@
 #include <vector>
 #include <map>
 #include "queue.h"
+#include "transport.h"
 
 namespace DISTPROJ {
 
 class Node;
 
 template <class T>
-class FakeRPCLayer {
+class FakeRPCLayer : public RPCLayer<T> {
 
   std::map<uint64_t, Queue<T>> messageQueues;
 

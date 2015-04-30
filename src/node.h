@@ -1,9 +1,17 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include <set>
+#include <cstdlib>
+
 namespace DISTPROJ {
 
   class Node {
+
+    std::set<uint64_t> knownNodes;
+
+    
+
     public:
     Node(uint64_t id);
 
