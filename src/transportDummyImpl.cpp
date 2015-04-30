@@ -3,7 +3,7 @@
 #include "queue.h"
 #include "transport.h"
 #include "transportDummyImpl.h"
-#include "Node.h"
+#include "node.h"
 
 using namespace DISTPROJ;
 
