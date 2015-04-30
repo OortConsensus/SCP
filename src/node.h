@@ -2,23 +2,25 @@
 #define NODE_H
 
 #include <set>
+#include <map>
 #include <cstdlib>
 #include <cstdint>
-#include <vector>
-#include "quorum.h"
 
 typedef uint64_t NodeID;
 
 namespace DISTPROJ {
 
+  class Quorum;
   class Slot;
+  class RPCLayer;
 
   class Node {
 
     public:
-      Node(uint64_t id, Quorum quorumSet);
+      Node(NodeID _id, const RPCLayer& _rpc);
+      Node(NodeID _id, const RPCLayer& _rpc, Quorum _quorumSet);
 
-      uint64_t getNodeID() { 
+      NodeID getNodeID() { 
         return id; 
       };
 
@@ -27,28 +29,31 @@ namespace DISTPROJ {
       }
 
     protected:
-      const uint64_t id;
+      const NodeID id;
+      const RPCLayer& rpc;
       Quorum quorumSet;
 
   };
 
-  template <class T>
   class LocalNode : public Node {
 
     public:
-      LocalNode(uint64_t id, Quorum quorumSet) : Node(id, quorumSet) {}; 
+      LocalNode(NodeID _id, const RPCLayer& _rpc) 
+        : Node(_id, _rpc) {};
+      LocalNode(NodeID _id, const RPCLayer& _rpc, Quorum _quorumSet) 
+        : Node(_id, _rpc, _quorumSet) {}; 
 
-      void AddKnownNode(Node node);
+      void AddKnownNode(NodeID v);
       void UpdateQurorum(Quorum quorumSet);
 
       void Tick();
-      void SendMessage(T msg);
-      void ProcessMessage(T msg);
+      void SendMessage(Message msg);
+      void ProcessMessage(Message msg);
 
       void DumpLog();
 
     private:
-      std::vector<Slot> log;
+      std::map<unsigned int, Slot> log;
       std::set<NodeID> knownNodes;
 
   };

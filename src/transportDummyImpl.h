@@ -5,7 +5,6 @@
 #include <cstdlib>
 #include <vector>
 #include <map>
-#include "quorum.h"
 #include "queue.h"
 #include "transport.h"
 
@@ -13,10 +12,9 @@ namespace DISTPROJ {
 
 class Node;
 
-template <class T>
-class FakeRPCLayer : public RPCLayer<T> {
+class FakeRPCLayer : public RPCLayer {
 
-  std::map<uint64_t, Queue<T>> messageQueues;
+  std::map<uint64_t, Queue<Message>&> messageQueues;
 
   class MessageClient {
 
@@ -25,13 +23,15 @@ class FakeRPCLayer : public RPCLayer<T> {
     public:
       MessageClient(uint64_t id);
 
-      void Send(T msg, uint64_t peerID);
-      bool Recieve(T* msg);    
-      void Broadcast(T msg);
+      void Send(Message msg, uint64_t peerID);
+      bool Recieve(Message& msg);    
+      void Broadcast(Message msg);
+
+      void AddNode(NodeID node);
   };
 
   public:
-    FakeRPCLayer(std::vector<Node> nodes);
+    FakeRPCLayer();
     MessageClient GetClient(uint64_t id);
 
 };

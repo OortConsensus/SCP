@@ -7,29 +7,22 @@
 
 using namespace DISTPROJ;
 
-template <class T>
-FakeRPCLayer<T>::FakeRPCLayer(std::vector<Node> nodes) {
-  for (auto node : nodes) {
-    messageQueues[node.id] = new Queue<T>();
-  }
+FakeRPCLayer::AddNode(NodeID node) {
+  messageQueues[node.id] = new Queue();
 }
 
-template <class T>
-typename FakeRPCLayer<T>::MessageClient FakeRPCLayer<T>::GetClient(uint64_t id) {
+FakeRPCLayer::MessageClient FakeRPCLayer::GetClient(uint64_t id) {
   return MessageClient(id); 
 }
 
-template <class T>
-FakeRPCLayer<T>::MessageClient::MessageClient(uint64_t id) : id(id) {}
+FakeRPCLayer::MessageClient::MessageClient(uint64_t id) : id(id) {}
 
-template <class T>
-void FakeRPCLayer<T>::FakeRPCLayer::MessageClient::Send(T msg, uint64_t peerID) {
+void FakeRPCLayer::FakeRPCLayer::MessageClient::Send(Message msg, uint64_t peerID) {
   messageQueues[peerID].Add(msg);
 }
 
 
-template <class T>
-bool FakeRPCLayer<T>::FakeRPCLayer::MessageClient::Recieve(T* msg) {
+bool FakeRPCLayer::FakeRPCLayer::MessageClient::Recieve(Message& msg) {
   // We only have 1 thread dequeing so this is chill.
   if (messageQueues[id].Empty()) {
     return false;
@@ -39,8 +32,7 @@ bool FakeRPCLayer<T>::FakeRPCLayer::MessageClient::Recieve(T* msg) {
   }
 }
 
-template <class T>
-void FakeRPCLayer<T>::FakeRPCLayer::MessageClient::Broadcast(T msg) {
+void FakeRPCLayer::FakeRPCLayer::MessageClient::Broadcast(Message msg) {
   // Client messages itself.
   for (auto peerID : messageQueues) {
     Send(msg, peerID);
