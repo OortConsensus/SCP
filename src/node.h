@@ -3,54 +3,53 @@
 
 #include <set>
 #include <cstdlib>
+#include <cstdint>
+#include <vector>
+#include "quorum.h"
+
+typedef uint64_t NodeID;
 
 namespace DISTPROJ {
 
+  class Slot;
+
   class Node {
 
-    std::set<uint64_t> knownNodes;
-
-    
-
     public:
-    Node(uint64_t id);
+      Node(uint64_t id, Quorum quorumSet);
 
+      uint64_t getNodeID() { 
+        return id; 
+      };
 
-      /*
-       * TODO:
-       * Methods:
-       * JHH -- I think we need these.
-       *
-       * checkForQuorum -- given a set of nodes determine if we have quorum.
-       * checkForVBlocking -- given a set of nodes determine if they are a
-       *                      v-blocking set for this node
-       * getQuorumSet -- given a quorumsethash return the quorum set.
-       * putQuorumSet -- store a quorum set.
-       */
-    uint64_t getNodeID() { return id; }; // Inline function
+      Quorum getQuorumSet() {
+        return quorumSet;
+      }
 
     protected:
-      const uint64_t id; // My node ID.
-      // TODO: Need a cache to map sethashes --> quorumSets
+      const uint64_t id;
+      Quorum quorumSet;
 
   };
 
+  template <class T>
   class LocalNode : public Node {
 
     public:
-      LocalNode(); // TODO: Take a quorum set and a SCP ptr.
+      LocalNode(uint64_t id, Quorum quorumSet) : Node(id, quorumSet) {}; 
 
-      /*
-       * TODO
-       * Methods:
-       * JHH -- I think we need these.
-       *
-       * getQuorumSetHash -- return the hash of the quorum set.
-       *
-       */
+      void AddKnownNode(Node node);
+      void UpdateQurorum(Quorum quorumSet);
+
+      void Tick();
+      void SendMessage(T msg);
+      void ProcessMessage(T msg);
+
+      void DumpLog();
 
     private:
-      // TODO: Quorum set and its hash should be private.
+      std::vector<Slot> log;
+      std::set<NodeID> knownNodes;
 
   };
 

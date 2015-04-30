@@ -24,17 +24,17 @@ FakeRPCLayer<T>::MessageClient::MessageClient(uint64_t id) : id(id) {}
 
 template <class T>
 void FakeRPCLayer<T>::FakeRPCLayer::MessageClient::Send(T msg, uint64_t peerID) {
-  this.messageQueues[peerID].Add(msg);
+  messageQueues[peerID].Add(msg);
 }
 
 
 template <class T>
 bool FakeRPCLayer<T>::FakeRPCLayer::MessageClient::Recieve(T* msg) {
   // We only have 1 thread dequeing so this is chill.
-  if (this.messageQueues[this.id].Empty()) {
+  if (messageQueues[id].Empty()) {
     return false;
   } else {
-    *msg = this.messageQueues[this.id].Get();
+    *msg = messageQueues[id].Get();
     return true;
   }
 }
@@ -42,8 +42,8 @@ bool FakeRPCLayer<T>::FakeRPCLayer::MessageClient::Recieve(T* msg) {
 template <class T>
 void FakeRPCLayer<T>::FakeRPCLayer::MessageClient::Broadcast(T msg) {
   // Client messages itself.
-  for (auto peerID : this.messageQueues) {
-    this.Send(msg, peerID);
+  for (auto peerID : messageQueues) {
+    Send(msg, peerID);
   }
 }
 

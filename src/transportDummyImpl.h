@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <vector>
 #include <map>
+#include "quorum.h"
 #include "queue.h"
 #include "transport.h"
 
