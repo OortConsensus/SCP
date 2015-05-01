@@ -9,9 +9,9 @@ using namespace DISTPROJ;
 int main(int argc, char **argv) {
 
   // Create nodes.
-  LocalNode
+  // LocalNode
 
-  const RPCLayer<Message>& rpc = new FakeRPCLayer();
+  const RPCLayer& rpc = FakeRPCLayer();
 
 
   

@@ -13,25 +13,26 @@ namespace DISTPROJ {
   class Quorum;
   class Slot;
   class RPCLayer;
+  class Message;
 
   class Node {
 
     public:
       Node(NodeID _id, const RPCLayer& _rpc);
-      Node(NodeID _id, const RPCLayer& _rpc, Quorum _quorumSet);
+      Node(NodeID _id, const RPCLayer& _rpc, Quorum& _quorumSet);
 
       NodeID getNodeID() { 
         return id; 
       };
 
-      Quorum getQuorumSet() {
+      Quorum& getQuorumSet() {
         return quorumSet;
       }
 
     protected:
       const NodeID id;
       const RPCLayer& rpc;
-      Quorum quorumSet;
+      Quorum& quorumSet;
 
   };
 
@@ -40,15 +41,15 @@ namespace DISTPROJ {
     public:
       LocalNode(NodeID _id, const RPCLayer& _rpc) 
         : Node(_id, _rpc) {};
-      LocalNode(NodeID _id, const RPCLayer& _rpc, Quorum _quorumSet) 
+      LocalNode(NodeID _id, const RPCLayer& _rpc, Quorum& _quorumSet) 
         : Node(_id, _rpc, _quorumSet) {}; 
 
       void AddKnownNode(NodeID v);
-      void UpdateQurorum(Quorum quorumSet);
+      void UpdateQurorum(Quorum& quorumSet);
 
       void Tick();
-      void SendMessage(Message msg);
-      void ProcessMessage(Message msg);
+      void SendMessage(Message& msg);
+      void ProcessMessage(Message& msg);
 
       void DumpLog();
 

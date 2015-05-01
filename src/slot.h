@@ -32,7 +32,7 @@ namespace DISTPROJ {
     public:
       Slot(int id);
 
-      void handle(Message msg);
+      void handle(Message& msg);
 
       // Dump state / received message inforamtion.
       void Dump();
@@ -43,7 +43,7 @@ namespace DISTPROJ {
 
       SlotState state;
       Phase phi;
-      std::map<NodeID, Message> M;
+      std::map<NodeID, Message&> M;
 
   };
 

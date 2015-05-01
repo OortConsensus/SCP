@@ -7,7 +7,7 @@
 
 using namespace DISTPROJ;
 
-FakeRPCLayer::AddNode(NodeID node) {
+FakeRPCLayer::AddNode(Node& node) {
   messageQueues[node.id] = new Queue();
 }
 

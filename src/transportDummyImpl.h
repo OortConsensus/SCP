@@ -10,31 +10,31 @@
 
 namespace DISTPROJ {
 
-class Node;
+  class Node;
 
-class FakeRPCLayer : public RPCLayer {
+  class Message;
+  class FakeRPCLayer : public RPCLayer {
+    std::map<uint64_t, Queue<Message&>> messageQueues;
 
-  std::map<uint64_t, Queue<Message>&> messageQueues;
+    class MessageClient {
 
-  class MessageClient {
-
-    uint64_t id;
+      uint64_t id;
 
     public:
       MessageClient(uint64_t id);
 
-      void Send(Message msg, uint64_t peerID);
+      void Send(Message& msg, uint64_t peerID);
       bool Recieve(Message& msg);    
-      void Broadcast(Message msg);
+      void Broadcast(Message& msg);
 
-      void AddNode(NodeID node);
-  };
+      void AddNode(Node& node);
+    };
 
   public:
     FakeRPCLayer();
     MessageClient GetClient(uint64_t id);
 
-};
+  };
 
 }
 
