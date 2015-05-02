@@ -5,12 +5,12 @@
 #include <map>
 
 #include "ballot.hpp"
+#include "quorum.hpp"
 #include "common.hpp"
 
 namespace DISTPROJ {
 
   class Message;
-  class Quorum;
 
   enum Phase { PREPARE, FINISH, EXTERNALIZE };
 
