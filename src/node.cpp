@@ -34,6 +34,14 @@ void Node::PrintQuorumSet() {
   }
 }
 
+LocalNode::LocalNode(NodeID _id, RPCLayer& _rpc)
+  : Node(_id, _rpc) {
+    mc = _rpc.GetClient();
+  };
+LocalNode::LocalNode(NodeID _id, RPCLayer& _rpc, Quorum _quorumSet) 
+  : Node(_id, _rpc, _quorumSet) {
+    mc = _rpc.GetClient();
+  }; 
 
 void LocalNode::Tick() {
   std::cout << "Tick\n";
@@ -60,6 +68,16 @@ void LocalNode::AddNodeToQuorum(NodeID v) {
 
 void LocalNode::SendMessage(Message& msg) {
 // TODO : interface with FakeRPC.
+  mc->Broadcast(&msg);
+}
+
+bool LocalNode::ReceiveMessage() {
+  Message msg;
+  bool received = mc->Receive(&msg);
+  if (received) {
+    // PRINT here just to show we got it 
+  }
+  return received;
 }
 
 void LocalNode::ProcessMessage(Message& msg) {

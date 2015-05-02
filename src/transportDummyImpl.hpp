@@ -24,7 +24,7 @@ namespace DISTPROJ {
 
   public:
     FakeRPCLayer();
-    MessageClient GetClient(NodeID id);
+    MessageClient* GetClient(NodeID id);
     void AddNode(NodeID node);
 
     void Send(Message* msg, NodeID id, NodeID peerID);

@@ -36,10 +36,8 @@ namespace DISTPROJ {
   class LocalNode : public Node {
 
   public:
-    LocalNode(NodeID _id, RPCLayer& _rpc)
-      : Node(_id, _rpc) {};
-    LocalNode(NodeID _id, RPCLayer& _rpc, Quorum _quorumSet) 
-      : Node(_id, _rpc, _quorumSet) {}; 
+    LocalNode(NodeID _id, RPCLayer& _rpc);
+    LocalNode(NodeID _id, RPCLayer& _rpc, Quorum _quorumSet) ;
 
     void AddKnownNode(NodeID v);
     void AddNodeToQuorum(NodeID v);
@@ -47,6 +45,7 @@ namespace DISTPROJ {
 
     void Start();
     void SendMessage(Message& msg);
+    bool ReceiveMessage();
     void ProcessMessage(Message& msg);
 
     void DumpLog();
@@ -56,6 +55,7 @@ namespace DISTPROJ {
     std::thread * t;
     std::map<unsigned int, Slot*> log;
     std::set<NodeID> knownNodes;
+    MessageClient* mc;
 
   };
 

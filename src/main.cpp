@@ -47,20 +47,31 @@ int main(int argc, char **argv) {
   dummyBallot.num = 0;
   dummyBallot.value = "";
 
-  PrepareMessage samplePrepareMsg = PrepareMessage(nodes[0]->GetNodeID(),0,dummyBallot, dummyBallot, dummyBallot, dummyBallot, nodes[0]->GetQuorumSet());
+  PrepareMessage samplePrepareMsg = PrepareMessage(
+      nodes[0]->GetNodeID(),
+      0,
+      dummyBallot,
+      dummyBallot,
+      dummyBallot,
+      dummyBallot,
+      nodes[0]->GetQuorumSet());
+
+  nodes[0]->SendMessage(samplePrepareMsg);
 
 
 
 
 
-  
+
+
+
   for (auto i=0; i < N; i++)
     nodes[i]->Start();
 
-  
 
 
-  
+
+
   std::cout << "Implementation coming soon\n";
 
   return 0;

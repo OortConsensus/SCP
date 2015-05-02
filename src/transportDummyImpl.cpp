@@ -15,8 +15,8 @@ void FakeRPCLayer::AddNode(NodeID node) {
   messageQueues[node] = new Queue<Message*>();
 }
 
-MessageClient FakeRPCLayer::GetClient(NodeID id) {
-  return MessageClient(id, this); 
+MessageClient* FakeRPCLayer::GetClient(NodeID id) {
+  return new MessageClient(id, this); 
 }
 
 
