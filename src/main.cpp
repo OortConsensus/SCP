@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
   // Create nodes.
   // LocalNode
 
-  const RPCLayer& rpc = FakeRPCLayer();
+  const FakeRPCLayer& rpc = FakeRPCLayer();
 
 
   
