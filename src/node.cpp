@@ -7,14 +7,15 @@
 #include "quorum.hpp"
 #include "slot.hpp"
 #include "node.hpp"
+#include <chrono>
 
 using namespace DISTPROJ;
 
 Node::Node(NodeID _id, RPCLayer& _rpc) 
-  : id(_id), rpc(_rpc) {}
+  : id(_id), rpc(_rpc), t(nullptr) {}
 
 Node::Node(NodeID _id, RPCLayer& _rpc, Quorum _quorumSet) 
-  : id(_id), rpc(_rpc), quorumSet(_quorumSet) {}
+  : id(_id), rpc(_rpc), quorumSet(_quorumSet), t(nullptr) {}
 
 NodeID Node::GetNodeID() { 
   return id; 
@@ -36,12 +37,17 @@ void Node::PrintQuorumSet() {
 
 
 void LocalNode::Tick() {
-  std::cout << "Tick\n";
+  while (true){
+  
+    std::cout << id << " Tick\n";
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    // std::this_thread::yield();
+  }
 }
 
 void LocalNode::Start() {
-  std::cout << "Tick\n";
-  if (t != nullptr) {
+  std::cout << id <<" Start\n";
+  if (t == nullptr) {
     t = new std::thread(&LocalNode::Tick, this);
   }
 }
@@ -59,7 +65,7 @@ void LocalNode::AddNodeToQuorum(NodeID v) {
 }
 
 void LocalNode::SendMessage(Message& msg) {
-// TODO : interface with FakeRPC.
+  // TODO : interface with FakeRPC.
 }
 
 void LocalNode::ProcessMessage(Message& msg) {
