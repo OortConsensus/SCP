@@ -30,6 +30,7 @@ namespace DISTPROJ {
     NodeID id;
     RPCLayer& rpc;
     Quorum quorumSet;
+    std::thread * t;
 
   };
 
@@ -52,7 +53,6 @@ namespace DISTPROJ {
 
   private:
     void Tick();
-    std::thread * t;
     std::map<unsigned int, Slot*> log;
     std::set<NodeID> knownNodes;
     MessageClient* mc;
