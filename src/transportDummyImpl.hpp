@@ -2,10 +2,11 @@
 #ifndef TRANSPORTDUMMY_H
 #define TRANSPORTDUMMY_H
 
-#include "types.hpp"
 #include <cstdlib>
 #include <vector>
 #include <map>
+
+#include "common.hpp"
 #include "queue.hpp"
 #include "transport.hpp"
 

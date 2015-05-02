@@ -4,17 +4,13 @@
 #include <string>
 #include <map>
 
-typedef uint64_t NodeID;
+#include "ballot.hpp"
+#include "common.hpp"
 
 namespace DISTPROJ {
 
   class Message;
   class Quorum;
-
-  struct Ballot {
-    int num;
-    std::string value;
-  };
 
   enum Phase { PREPARE, FINISH, EXTERNALIZE };
 
@@ -27,7 +23,7 @@ namespace DISTPROJ {
   };
 
 
-   class Slot {
+  class Slot {
 
     public:
       Slot(int id);

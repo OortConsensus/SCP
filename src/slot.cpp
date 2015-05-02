@@ -20,24 +20,25 @@
 #include "message.hpp"
 #include "slot.hpp"
 using namespace DISTPROJ;
+
+
 Slot::Slot(int id){
   state.slotNum = id;
 }
 
 void Slot::handle(Message& msg){
-
-
+  // TODO
 }
 
-      // Dump state / received message inforamtion.
+// Dump state / received message inforamtion.
 void Slot::Dump(){
-
+  // TODO
 }
 
 void Slot::handlePrepare(NodeID v, Quorum& d, SlotState vState){
-
+  // TODO
 }
+
 void Slot::handleFinish(NodeID v, Quorum& d, SlotState vState){
-
-
+  // TODO
 }

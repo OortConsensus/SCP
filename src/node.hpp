@@ -1,12 +1,12 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include "types.hpp"
 #include <set>
 #include <map>
 #include <cstdlib>
 #include <cstdint>
 
+#include "common.hpp"
 
 namespace DISTPROJ {
 
@@ -20,9 +20,8 @@ namespace DISTPROJ {
     public:
       Node(NodeID _id, RPCLayer& _rpc, Quorum& _quorumSet);
 
-    NodeID getNodeID();
-
-    Quorum& getQuorumSet();
+      NodeID getNodeID();
+      Quorum& getQuorumSet();
 
     protected:
       NodeID id;

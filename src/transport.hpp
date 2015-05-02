@@ -1,7 +1,8 @@
 
 #ifndef TRANSPORT_H
 #define TRANSPORT_H
-#include "types.hpp"
+
+#include "common.hpp"
 
 namespace DISTPROJ {
   class Message;

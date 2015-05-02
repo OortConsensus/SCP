@@ -1,13 +1,15 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
-#include "types.hpp"
+
 #include <string>
+
+#include "ballot.hpp"
+#include "common.hpp"
 
 namespace DISTPROJ {
 
   enum MessageType {FinishMessage_t, PrepareMessage_t};
   
-  struct Ballot;
   class Quorum;
   class Message {
 
@@ -33,7 +35,7 @@ namespace DISTPROJ {
   private:
     NodeID v;
     unsigned int slotID;
-    Ballot& b,  & p,& p_0,& c;
+    Ballot& b, & p, & p_0, & c;
     Quorum& d;
 
     
