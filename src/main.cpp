@@ -1,11 +1,12 @@
 #include <iostream>
+#include <array>
 
 #include "transport.hpp"
 #include "transportDummyImpl.hpp"
 #include "message.hpp"
 #include "quorum.hpp"
 #include "node.hpp"
-#include <array>
+#include "ballot.hpp"
 
 using namespace DISTPROJ;
 const int N = 6;
@@ -42,7 +43,12 @@ int main(int argc, char **argv) {
   nodes[1]->PrintQuorumSet();
 
   // Make a sample message.
-  //PrepareMessage samplePrepareMsg = PrepareMessage(n1.GetNodeID(),0, );
+  Ballot dummyBallot;
+  dummyBallot.num = 0;
+  dummyBallot.value = "";
+
+  PrepareMessage samplePrepareMsg = PrepareMessage(nodes[0]->GetNodeID(),0,dummyBallot, dummyBallot, dummyBallot, dummyBallot, nodes[0]->GetQuorumSet());
+
 
 
 
