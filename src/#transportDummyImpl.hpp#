@@ -1,0 +1,39 @@
+
+#ifndef TRANSPORTDUMMY_H
+#define TRANSPORTDUMMY_H
+
+#include "types.hpp"
+#include <cstdlib>
+#include <vector>
+#include <map>
+#include "queue.hpp"
+#include "transport.hpp"
+
+namespace DISTPROJ {
+
+  class Node;
+
+  class Message;
+  class MessageClient;
+
+  class FakeRPCLayer : public RPCLayer {
+    std::map<uint64_t, Queue<Message&>*> messageQueues;
+
+    friend MessageClient;
+
+  public:
+    // FakeRPCLayer();
+    MessageClient GetClient(uint64_t id);
+    void AddNode(NodeID node);
+
+  };
+
+  class MessageClient{
+    uint64_t id;
+  public:
+    MessageClient(uint64_t id);
+  };
+
+}
+
+#endif

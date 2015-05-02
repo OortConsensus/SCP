@@ -9,13 +9,15 @@
 template <class T>
 class Queue {
 
+  struct internal {
+    T& i;
+  };
   std::mutex mtx;
-  std::queue<T> elements;
-
+  std::queue<internal> elements;
   public:
     Queue();
-    void Add(T value);
-    T Get();
+    void Add(T& value);
+    T& Get();
     size_t Size();
     bool Empty();
 

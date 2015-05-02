@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "transportDummyImpl.h"
-#include "message.h"
-#include "node.h"
+#include "transportDummyImpl.hpp"
+#include "message.hpp"
+#include "node.hpp"
 
 using namespace DISTPROJ;
 

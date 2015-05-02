@@ -1,4 +1,4 @@
-#include "quorum.h"
+#include "quorum.hpp"
 
 using namespace DISTPROJ;
 

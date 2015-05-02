@@ -1,7 +1,6 @@
 #ifndef SLOT_H
 #define SLOT_H
 
-#include "util.h"
 #include <string>
 #include <map>
 
@@ -10,6 +9,7 @@ typedef uint64_t NodeID;
 namespace DISTPROJ {
 
   class Message;
+  class Quorum;
 
   struct Ballot {
     int num;
@@ -38,8 +38,8 @@ namespace DISTPROJ {
       void Dump();
 
     private:
-      void handlePrepare(NodeID v, Quorum d, SlotState vState);
-      void handleFinish(NodeID v, Quorum d, SlotState vState);
+      void handlePrepare(NodeID v, Quorum& d, SlotState vState);
+      void handleFinish(NodeID v, Quorum& d, SlotState vState);
 
       SlotState state;
       Phase phi;

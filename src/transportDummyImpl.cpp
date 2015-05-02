@@ -1,41 +1,66 @@
 
 #include <vector>
-#include "queue.h"
-#include "transport.h"
-#include "transportDummyImpl.h"
-#include "node.h"
-
+#include "queue.hpp"
+#include "transport.hpp"
+#include "node.hpp"
+#include "slot.hpp"
+#include "transportDummyImpl.hpp"
+#include "message.hpp"
 using namespace DISTPROJ;
 
-FakeRPCLayer::AddNode(Node& node) {
-  messageQueues[node.id] = new Queue();
+void FakeRPCLayer::AddNode(NodeID node) {
+  messageQueues[node] = new Queue<Message&>();
 }
 
-FakeRPCLayer::MessageClient FakeRPCLayer::GetClient(uint64_t id) {
-  return MessageClient(id); 
-}
-
-FakeRPCLayer::MessageClient::MessageClient(uint64_t id) : id(id) {}
-
-void FakeRPCLayer::FakeRPCLayer::MessageClient::Send(Message msg, uint64_t peerID) {
-  messageQueues[peerID].Add(msg);
+MessageClient FakeRPCLayer::GetClient(NodeID id) {
+  return MessageClient(id, this); 
 }
 
 
-bool FakeRPCLayer::FakeRPCLayer::MessageClient::Recieve(Message& msg) {
+
+
+
+
+void FakeRPCLayer::Send(Message& msg, NodeID id, NodeID peerID) {
+  messageQueues[peerID]->Add(msg);
+}
+
+
+bool FakeRPCLayer::Recieve(Message& msg, NodeID id) {
   // We only have 1 thread dequeing so this is chill.
-  if (messageQueues[id].Empty()) {
+  if (messageQueues[id]->Empty()) {
     return false;
   } else {
-    *msg = messageQueues[id].Get();
+    msg = messageQueues[id]->Get();
     return true;
   }
 }
 
-void FakeRPCLayer::FakeRPCLayer::MessageClient::Broadcast(Message msg) {
+void FakeRPCLayer::Broadcast(Message& msg, NodeID id) {
   // Client messages itself.
   for (auto peerID : messageQueues) {
-    Send(msg, peerID);
+    Send(msg, id, peerID.first);
   }
+}
+
+
+
+
+
+
+
+MessageClient::MessageClient(NodeID id, RPCLayer* r) : id(id), rpc(r) {}
+
+void MessageClient::Send(Message& msg, NodeID peerID) {
+  rpc->Send(msg, id, peerID);
+}
+
+
+bool MessageClient::Recieve(Message& msg) {
+  rpc->Recieve(msg, id);
+}
+
+void MessageClient::Broadcast(Message& msg) {
+  rpc->Broadcast(msg, id);
 }
 
