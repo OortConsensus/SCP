@@ -49,11 +49,14 @@ LocalNode::LocalNode(NodeID _id, RPCLayer& _rpc, Quorum _quorumSet)
   }; 
 
 void LocalNode::Tick() {
+  Message * m;
   while (true){
-  
-    printf("%i Tick\n",id);
+    if (ReceiveMessage(m)) {
+
+      // printf("%i Tick\n",m->type());
+
+    }
     std::this_thread::sleep_for(std::chrono::seconds(1));
-    // std::this_thread::yield();
   }
 }
 
@@ -81,8 +84,7 @@ void LocalNode::SendMessage(Message& msg) {
   mc->Broadcast(&msg);
 }
 
-bool LocalNode::ReceiveMessage() {
-  Message* msg = nullptr;
+bool LocalNode::ReceiveMessage(Message * msg) {
   bool received = mc->Receive(msg);
   if (received) {
     // PRINT here just to show we got it 

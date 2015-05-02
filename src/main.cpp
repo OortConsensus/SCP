@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
 
   nodes[0]->SendMessage(samplePrepareMsg);
 
-  nodes[1]->ReceiveMessage();
+  // nodes[1]->ReceiveMessage();
   
 
 

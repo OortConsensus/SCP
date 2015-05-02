@@ -47,7 +47,7 @@ namespace DISTPROJ {
 
     void Start();
     void SendMessage(Message& msg);
-    bool ReceiveMessage();
+    bool ReceiveMessage(Message * msg);
     void ProcessMessage(Message& msg);
 
     void DumpLog();
