@@ -78,10 +78,11 @@ void LocalNode::SendMessage(Message& msg) {
 }
 
 bool LocalNode::ReceiveMessage() {
-  Message msg;
-  bool received = mc->Receive(&msg);
+  Message* msg = nullptr;
+  bool received = mc->Receive(msg);
   if (received) {
     // PRINT here just to show we got it 
+    std::cout << "Got a message\n";
   }
   return received;
 }
