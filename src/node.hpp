@@ -21,8 +21,9 @@ namespace DISTPROJ {
       Node(NodeID _id, RPCLayer& _rpc);
       Node(NodeID _id, RPCLayer& _rpc, Quorum _quorumSet);
 
-      NodeID getNodeID();
-      Quorum getQuorumSet();
+      NodeID GetNodeID();
+      Quorum GetQuorumSet();
+      void PrintQuorumSet();
 
     protected:
       NodeID id;

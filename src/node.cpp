@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <set>
 
 #include "message.hpp"
 #include "transportDummyImpl.hpp"
@@ -15,13 +16,26 @@ Node::Node(NodeID _id, RPCLayer& _rpc)
 Node::Node(NodeID _id, RPCLayer& _rpc, Quorum _quorumSet) 
   : id(_id), rpc(_rpc), quorumSet(_quorumSet) {}
 
-NodeID Node::getNodeID() { 
+NodeID Node::GetNodeID() { 
   return id; 
 }
 
-Quorum Node::getQuorumSet() {
+Quorum Node::GetQuorumSet() {
   return quorumSet;
 }
+
+void Node::PrintQuorumSet() {
+  std::cout << "Printing quorum set for node " << id << "\n";
+  std::cout << "Threshold: " << quorumSet.threshold << "\n";
+  std::cout << "Quorum members : \n";
+  std::set<NodeID>::iterator iter;
+  for (iter=quorumSet.members.begin(); iter != quorumSet.members.end(); ++iter) {
+    std::cout << (*iter) << "\n";
+  }
+}
+
+
+
 void LocalNode::Tick() {
   std::cout << "Tick\n";
 }
@@ -32,6 +46,10 @@ void LocalNode::AddKnownNode(NodeID v) {
 
 void LocalNode::UpdateQurorum(Quorum _quorumSet) {
   quorumSet = _quorumSet;
+}
+
+void LocalNode::AddNodeToQuorum(NodeID v) {
+  quorumSet.members.insert(v);
 }
 
 void LocalNode::SendMessage(Message& msg) {

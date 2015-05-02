@@ -10,7 +10,7 @@ using namespace DISTPROJ;
 
 int main(int argc, char **argv) {
 
-
+  // Create transport layer.
   FakeRPCLayer rpc = FakeRPCLayer();
 
   // Create nodes.
@@ -21,11 +21,11 @@ int main(int argc, char **argv) {
   LocalNode n5 = LocalNode(5, rpc);
 
   // Print IDs.
-  std::cout << n1.getNodeID() << "\n";
-  std::cout << n2.getNodeID() << "\n";
-  std::cout << n3.getNodeID() << "\n";
-  std::cout << n4.getNodeID() << "\n";
-  std::cout << n5.getNodeID() << "\n";
+  std::cout << n1.GetNodeID() << "\n";
+  std::cout << n2.GetNodeID() << "\n";
+  std::cout << n3.GetNodeID() << "\n";
+  std::cout << n4.GetNodeID() << "\n";
+  std::cout << n5.GetNodeID() << "\n";
 
   // Create quorum sets.
   Quorum qs;
@@ -38,6 +38,17 @@ int main(int argc, char **argv) {
   n3.UpdateQurorum(qs);
   n4.UpdateQurorum(qs);
   n5.UpdateQurorum(qs);
+
+  // Print a nodes quorum set threshold.
+  n1.PrintQuorumSet();
+
+  // Update the quorum set.
+  LocalNode n6 = LocalNode(6, rpc);
+  n1.AddNodeToQuorum(n6.GetNodeID());
+  n1.PrintQuorumSet();
+
+  // Make a sample message.
+  //PrepareMessage samplePrepareMsg = PrepareMessage(n1.GetNodeID(),0, );
 
 
 
