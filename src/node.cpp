@@ -52,8 +52,7 @@ void LocalNode::Tick() {
   Message * m;
   while (true){
     if (ReceiveMessage(m)) {
-
-      // printf("%i Tick\n",m->type());
+      printf("%i Tick\n", m->type());
 
     }
     std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -86,9 +85,9 @@ void LocalNode::SendMessage(Message& msg) {
 
 bool LocalNode::ReceiveMessage(Message * msg) {
   bool received = mc->Receive(msg);
-  if (received) {
+  if (received && msg) {
     // PRINT here just to show we got it 
-    std::cout << "Got a message\n";
+    printf("Got a message\n");
   }
   return received;
 }
