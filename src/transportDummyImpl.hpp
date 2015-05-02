@@ -22,7 +22,7 @@ namespace DISTPROJ {
     friend MessageClient;
 
   public:
-    // FakeRPCLayer();
+    FakeRPCLayer();
     MessageClient GetClient(NodeID id);
     void AddNode(NodeID node);
 

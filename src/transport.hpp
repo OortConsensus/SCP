@@ -10,6 +10,7 @@ namespace DISTPROJ {
 class RPCLayer {
 
   public:
+  RPCLayer();
   virtual void Send(Message& msg, uint64_t id,  uint64_t peerID);
   virtual bool Recieve(Message& msg, uint64_t id);    
   virtual void Broadcast(Message& msg, uint64_t id);

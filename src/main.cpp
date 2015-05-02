@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "transport.hpp"
 #include "transportDummyImpl.hpp"
 #include "message.hpp"
 #include "node.hpp"

@@ -8,6 +8,9 @@
 #include "message.hpp"
 using namespace DISTPROJ;
 
+
+FakeRPCLayer::FakeRPCLayer(){}
+
 void FakeRPCLayer::AddNode(NodeID node) {
   messageQueues[node] = new Queue<Message&>();
 }
