@@ -12,10 +12,14 @@
 using namespace DISTPROJ;
 
 Node::Node(NodeID _id, RPCLayer& _rpc) 
-  : id(_id), rpc(_rpc), t(nullptr) {}
+  : id(_id), rpc(_rpc), t(nullptr) {
+  rpc.AddNode(id);
+}
 
 Node::Node(NodeID _id, RPCLayer& _rpc, Quorum _quorumSet) 
-  : id(_id), rpc(_rpc), quorumSet(_quorumSet), t(nullptr) {}
+  : id(_id), rpc(_rpc), quorumSet(_quorumSet), t(nullptr) {
+  rpc.AddNode(id);
+}
 
 NodeID Node::GetNodeID() { 
   return id; 
