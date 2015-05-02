@@ -4,13 +4,13 @@
 #include <string>
 
 #include "ballot.hpp"
+#include "quorum.hpp"
 #include "common.hpp"
 
 namespace DISTPROJ {
 
   enum MessageType {FinishMessage_t, PrepareMessage_t};
   
-  class Quorum;
   class Message {
 
   public:
