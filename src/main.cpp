@@ -5,8 +5,11 @@
 #include "message.hpp"
 #include "quorum.hpp"
 #include "node.hpp"
+#include <array>
 
 using namespace DISTPROJ;
+const int N = 6;
+std::array<LocalNode*, N> nodes;
 
 int main(int argc, char **argv) {
 
@@ -14,38 +17,29 @@ int main(int argc, char **argv) {
   FakeRPCLayer rpc = FakeRPCLayer();
 
   // Create nodes.
-  LocalNode n1 = LocalNode(1, rpc);
-  LocalNode n2 = LocalNode(2, rpc);
-  LocalNode n3 = LocalNode(3, rpc);
-  LocalNode n4 = LocalNode(4, rpc);
-  LocalNode n5 = LocalNode(5, rpc);
+  for (auto i =0; i < N-1; i++)
+    nodes[i] = new LocalNode(i, rpc);
 
   // Print IDs.
-  std::cout << n1.GetNodeID() << "\n";
-  std::cout << n2.GetNodeID() << "\n";
-  std::cout << n3.GetNodeID() << "\n";
-  std::cout << n4.GetNodeID() << "\n";
-  std::cout << n5.GetNodeID() << "\n";
+  for (auto i=0; i < N-1; i++)
+    std::cout << nodes[i]->GetNodeID() << "\n";
 
   // Create quorum sets.
   Quorum qs;
   qs.threshold = 3;
-  qs.members = std::set<NodeID> {1, 2, 3, 4, 5};
+  qs.members = std::set<NodeID> {0, 1, 2, 3, 4};
 
   // Add quorum sets to nodes.
-  n1.UpdateQurorum(qs);
-  n2.UpdateQurorum(qs);
-  n3.UpdateQurorum(qs);
-  n4.UpdateQurorum(qs);
-  n5.UpdateQurorum(qs);
+  for (auto i=0; i < N-1; i++)
+    nodes[i]->UpdateQurorum(qs);
 
   // Print a nodes quorum set threshold.
-  n1.PrintQuorumSet();
+  nodes[1]->PrintQuorumSet();
 
   // Update the quorum set.
-  LocalNode n6 = LocalNode(6, rpc);
-  n1.AddNodeToQuorum(n6.GetNodeID());
-  n1.PrintQuorumSet();
+  nodes[5]  = new LocalNode(5, rpc);
+  nodes[1]->AddNodeToQuorum(nodes[5]->GetNodeID());
+  nodes[1]->PrintQuorumSet();
 
   // Make a sample message.
   //PrepareMessage samplePrepareMsg = PrepareMessage(n1.GetNodeID(),0, );
