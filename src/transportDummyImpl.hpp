@@ -17,7 +17,7 @@ namespace DISTPROJ {
   class MessageClient;
 
   class FakeRPCLayer : public RPCLayer {
-    std::map<NodeID, Queue<Message&>*> messageQueues;
+    std::map<NodeID, Queue<Message*>*> messageQueues;
 
     friend MessageClient;
 
@@ -26,9 +26,9 @@ namespace DISTPROJ {
     MessageClient GetClient(NodeID id);
     void AddNode(NodeID node);
 
-    void Send(Message& msg, NodeID id, NodeID peerID);
-    bool Recieve(Message& msg, NodeID id);    
-    void Broadcast(Message& msg, NodeID id);
+    void Send(Message* msg, NodeID id, NodeID peerID);
+    bool Recieve(Message* msg, NodeID id);    
+    void Broadcast(Message* msg, NodeID id);
   };
 
   class MessageClient{
@@ -36,9 +36,9 @@ namespace DISTPROJ {
     RPCLayer* rpc;
   public:
     MessageClient(NodeID id, RPCLayer* r);
-    void Send(Message& msg, NodeID peerID);
-    bool Recieve(Message& msg);    
-    void Broadcast(Message& msg);
+    void Send(Message* msg, NodeID peerID);
+    bool Recieve(Message* msg);    
+    void Broadcast(Message* msg);
   };
 
 }

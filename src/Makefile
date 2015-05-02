@@ -9,7 +9,7 @@ LFLAGS =
 # define any libraries to link into executable:, e.g. -l
 LIBS =
 # define the C source files
-SRCS = message.cpp transport.cpp transportDummyImpl.cpp  slot.cpp queue.cpp node.cpp  quorum.cpp main.cpp
+SRCS = message.cpp transport.cpp transportDummyImpl.cpp  slot.cpp node.cpp  quorum.cpp main.cpp
 OBJS = $(SRCS:.cpp=.o)
 MAIN = main
 

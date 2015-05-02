@@ -12,7 +12,7 @@ using namespace DISTPROJ;
 FakeRPCLayer::FakeRPCLayer(){}
 
 void FakeRPCLayer::AddNode(NodeID node) {
-  messageQueues[node] = new Queue<Message&>();
+  messageQueues[node] = new Queue<Message*>();
 }
 
 MessageClient FakeRPCLayer::GetClient(NodeID id) {
@@ -24,12 +24,12 @@ MessageClient FakeRPCLayer::GetClient(NodeID id) {
 
 
 
-void FakeRPCLayer::Send(Message& msg, NodeID id, NodeID peerID) {
+void FakeRPCLayer::Send(Message* msg, NodeID id, NodeID peerID) {
   messageQueues[peerID]->Add(msg);
 }
 
 
-bool FakeRPCLayer::Recieve(Message& msg, NodeID id) {
+bool FakeRPCLayer::Recieve(Message* msg, NodeID id) {
   // We only have 1 thread dequeing so this is chill.
   if (messageQueues[id]->Empty()) {
     return false;
@@ -39,7 +39,7 @@ bool FakeRPCLayer::Recieve(Message& msg, NodeID id) {
   }
 }
 
-void FakeRPCLayer::Broadcast(Message& msg, NodeID id) {
+void FakeRPCLayer::Broadcast(Message* msg, NodeID id) {
   // Client messages itself.
   for (auto peerID : messageQueues) {
     Send(msg, id, peerID.first);
@@ -54,16 +54,16 @@ void FakeRPCLayer::Broadcast(Message& msg, NodeID id) {
 
 MessageClient::MessageClient(NodeID id, RPCLayer* r) : id(id), rpc(r) {}
 
-void MessageClient::Send(Message& msg, NodeID peerID) {
+void MessageClient::Send(Message* msg, NodeID peerID) {
   rpc->Send(msg, id, peerID);
 }
 
 
-bool MessageClient::Recieve(Message& msg) {
+bool MessageClient::Recieve(Message* msg) {
   rpc->Recieve(msg, id);
 }
 
-void MessageClient::Broadcast(Message& msg) {
+void MessageClient::Broadcast(Message* msg) {
   rpc->Broadcast(msg, id);
 }
 
