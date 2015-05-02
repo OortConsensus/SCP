@@ -9,16 +9,17 @@
 
 using namespace DISTPROJ;
 
-Node::Node(NodeID _id, RPCLayer& _rpc, Quorum& _quorumSet) : id(_id), rpc(_rpc), quorumSet(_quorumSet) {
-// NodeID d =getNodeID();
-// rpc.AddNode(d);
-}
+Node::Node(NodeID _id, RPCLayer& _rpc) 
+  : id(_id), rpc(_rpc) {}
+
+Node::Node(NodeID _id, RPCLayer& _rpc, Quorum _quorumSet) 
+  : id(_id), rpc(_rpc), quorumSet(_quorumSet) {}
 
 NodeID Node::getNodeID() { 
   return id; 
 }
 
-Quorum& Node::getQuorumSet() {
+Quorum Node::getQuorumSet() {
   return quorumSet;
 }
 void LocalNode::Tick() {
@@ -29,7 +30,7 @@ void LocalNode::AddKnownNode(NodeID v) {
   knownNodes.insert(v);
 }
 
-void LocalNode::UpdateQurorum(Quorum& _quorumSet) {
+void LocalNode::UpdateQurorum(Quorum _quorumSet) {
   quorumSet = _quorumSet;
 }
 
@@ -46,7 +47,7 @@ void LocalNode::ProcessMessage(Message& msg) {
 
 void LocalNode::DumpLog() {
   for (auto slot : log) {
-  // slot.Dump();
+    slot.second->Dump();
   }
 }
 

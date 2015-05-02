@@ -14,6 +14,14 @@ int main(int argc, char **argv) {
 
   const FakeRPCLayer& rpc = FakeRPCLayer();
 
+  
+
+  //Node n1 = Node(1, rpc, )
+
+
+
+
+
 
   
   std::cout << "Implementation coming soon\n";

@@ -7,10 +7,10 @@
 #include <cstdint>
 
 #include "common.hpp"
+#include "quorum.hpp"
 
 namespace DISTPROJ {
 
-  class Quorum;
   class RPCLayer;
   class Message;
   class Slot;
@@ -18,26 +18,30 @@ namespace DISTPROJ {
   class Node {
 
     public:
-      Node(NodeID _id, RPCLayer& _rpc, Quorum& _quorumSet);
+      Node(NodeID _id, RPCLayer& _rpc);
+      Node(NodeID _id, RPCLayer& _rpc, Quorum _quorumSet);
 
       NodeID getNodeID();
-      Quorum& getQuorumSet();
+      Quorum getQuorumSet();
 
     protected:
       NodeID id;
       RPCLayer& rpc;
-      Quorum& quorumSet;
+      Quorum quorumSet;
 
   };
 
   class LocalNode : public Node {
 
     public:
-      LocalNode(NodeID _id, RPCLayer& _rpc, Quorum& _quorumSet) 
+      LocalNode(NodeID _id, RPCLayer& _rpc)
+        : Node(_id, _rpc) {};
+      LocalNode(NodeID _id, RPCLayer& _rpc, Quorum _quorumSet) 
         : Node(_id, _rpc, _quorumSet) {}; 
 
       void AddKnownNode(NodeID v);
-      void UpdateQurorum(Quorum& quorumSet);
+      void AddNodeToQuorum(NodeID v);
+      void UpdateQurorum(Quorum quorumSet);
 
       void Tick();
       void SendMessage(Message& msg);

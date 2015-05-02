@@ -1,11 +1,16 @@
 #ifndef QUORUM_H
 #define QUORUM_H
 
+#include <set>
+
+#include "common.hpp"
+
 namespace DISTPROJ {
 
-class Quorum {
-
-};
+  struct Quorum {
+    int threshhold;
+    std::set<NodeID> members;
+  };
 
 }
 
