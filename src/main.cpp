@@ -53,6 +53,11 @@ int main(int argc, char **argv) {
 
 
 
+  
+  for (auto i=0; i < N; i++)
+    nodes[i]->Start();
+
+  
 
 
   
