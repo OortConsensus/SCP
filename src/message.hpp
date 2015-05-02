@@ -12,10 +12,10 @@ namespace DISTPROJ {
   class Message {
 
   public:
-    virtual MessageType type();
-    virtual std::string toJSON();
-    Message fromJSON(std::string s);
-    virtual unsigned int getSlot();
+    virtual MessageType type() = 0;
+    virtual std::string toJSON()=0;
+    // Message f(std::string s);
+    virtual unsigned int getSlot() = 0;
 
   };
   

@@ -5,10 +5,11 @@
 
 using namespace DISTPROJ;
 
-Message fromJSON(std::string s){
+// Message fromJSON(std::string s){
 
-  return FinishMessage(10,10,new Ballot{0,""}, new Quorum() );
-}
+//   return FinishMessage(10,10,new Ballot{0,""}, new Quorum() );
+// }
+
 std::string PrepareMessage::toJSON(){
   return "";
 }
