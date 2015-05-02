@@ -9,7 +9,7 @@
 
 namespace DISTPROJ {
 
-  enum MessageType {FinishMessage_t, PrepareMessage_t};
+  enum MessageType {FinishMessage_t=0, PrepareMessage_t=1};
   
   class Message {
   private:

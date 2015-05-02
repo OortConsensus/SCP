@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
   dummyBallot.num = 0;
   dummyBallot.value = "";
 
-  PrepareMessage samplePrepareMsg = PrepareMessage(
+  PrepareMessage * samplePrepareMsg = new PrepareMessage(
       nodes[0]->GetNodeID(),
       0,
       dummyBallot,

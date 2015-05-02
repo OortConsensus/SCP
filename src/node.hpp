@@ -46,8 +46,8 @@ namespace DISTPROJ {
     void UpdateQurorum(Quorum quorumSet);
 
     void Start();
-    void SendMessage(Message& msg);
-    bool ReceiveMessage(Message * msg);
+    void SendMessage(Message* msg);
+    bool ReceiveMessage(Message ** msg);
     void ProcessMessage(Message& msg);
 
     void DumpLog();

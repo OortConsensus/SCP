@@ -28,7 +28,7 @@ namespace DISTPROJ {
     void AddNode(NodeID node);
 
     void Send(Message* msg, NodeID id, NodeID peerID);
-    bool Receive(Message* msg, NodeID id);    
+    bool Receive(Message** msg, NodeID id);    
     void Broadcast(Message* msg, NodeID id);
   };
 
@@ -38,7 +38,7 @@ namespace DISTPROJ {
   public:
     MessageClient(NodeID id, RPCLayer* r);
     void Send(Message* msg, NodeID peerID);
-    bool Receive(Message* msg);    
+    bool Receive(Message** msg);    
     void Broadcast(Message* msg);
   };
 

@@ -49,10 +49,21 @@ LocalNode::LocalNode(NodeID _id, RPCLayer& _rpc, Quorum _quorumSet)
   }; 
 
 void LocalNode::Tick() {
-  Message * m;
+  Message * m = nullptr;
   while (true){
-    if (ReceiveMessage(m)) {
-      printf("%i Tick\n", m->type());
+    if (ReceiveMessage(&m)) {
+      
+      switch (m->type()) {
+      case PrepareMessage_t:
+        printf("PREPARE");
+        break;
+      case FinishMessage_t:
+        printf("FINISH");
+        break;
+      default:
+        printf("GARBAGE");
+        break;
+      }
 
     }
     std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -78,18 +89,20 @@ void LocalNode::AddNodeToQuorum(NodeID v) {
   quorumSet.members.insert(v);
 }
 
-void LocalNode::SendMessage(Message& msg) {
+void LocalNode::SendMessage(Message* msg) {
 // TODO : interface with FakeRPC.
-  mc->Broadcast(&msg);
+  mc->Broadcast(msg);
 }
 
-bool LocalNode::ReceiveMessage(Message * msg) {
+bool LocalNode::ReceiveMessage(Message ** msg) {
   bool received = mc->Receive(msg);
-  if (received && msg) {
+  if (received && *msg) {
+
     // PRINT here just to show we got it 
     printf("Got a message\n");
+    return true;
   }
-  return received;
+  return false;
 }
 
 void LocalNode::ProcessMessage(Message& msg) {

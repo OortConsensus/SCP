@@ -29,13 +29,13 @@ void FakeRPCLayer::Send(Message* msg, NodeID id, NodeID peerID) {
 }
 
 
-bool FakeRPCLayer::Receive(Message* msg, NodeID id) {
+bool FakeRPCLayer::Receive(Message** msg, NodeID id) {
   // We only have 1 thread dequeing so this is chill.
   if (messageQueues[id]->Empty()) {
     return false;
   } else {
-    msg = messageQueues[id]->Get();
-    return true;
+    *msg = messageQueues[id]->Get();
+    return *msg; // implicitly checks for validity
   }
 }
 
@@ -59,7 +59,7 @@ void MessageClient::Send(Message* msg, NodeID peerID) {
 }
 
 
-bool MessageClient::Receive(Message* msg) {
+bool MessageClient::Receive(Message** msg) {
   return rpc->Receive(msg, id);
 }
 
