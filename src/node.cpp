@@ -8,7 +8,7 @@
 #include "slot.hpp"
 #include "node.hpp"
 #include <chrono>
-
+#include <stdio.h>
 using namespace DISTPROJ;
 
 Node::Node(NodeID _id, RPCLayer& _rpc) 
@@ -26,9 +26,9 @@ Quorum Node::GetQuorumSet() {
 }
 
 void Node::PrintQuorumSet() {
-  std::cout << "Printing quorum set for node " << id << "\n";
-  std::cout << "Threshold: " << quorumSet.threshold << "\n";
-  std::cout << "Quorum members : \n";
+  printf("Printing quorum set for node %i \n", id);
+  printf("Threshold: %i ", quorumSet.threshold);
+  printf("Quorum members : \n");
   std::set<NodeID>::iterator iter;
   for (iter=quorumSet.members.begin(); iter != quorumSet.members.end(); ++iter) {
     std::cout << (*iter) << "\n";
@@ -47,14 +47,14 @@ LocalNode::LocalNode(NodeID _id, RPCLayer& _rpc, Quorum _quorumSet)
 void LocalNode::Tick() {
   while (true){
   
-    std::cout << id << " Tick\n";
+    printf("%i Tick\n",id);
     std::this_thread::sleep_for(std::chrono::seconds(1));
     // std::this_thread::yield();
   }
 }
 
 void LocalNode::Start() {
-  std::cout << id <<" Start\n";
+  printf(" Start\n");
   if (t == nullptr) {
     t = new std::thread(&LocalNode::Tick, this);
   }
