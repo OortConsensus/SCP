@@ -35,9 +35,15 @@ void Node::PrintQuorumSet() {
 }
 
 
-
 void LocalNode::Tick() {
   std::cout << "Tick\n";
+}
+
+void LocalNode::Start() {
+  std::cout << "Tick\n";
+  if (t != nullptr) {
+    t = new std::thread(&LocalNode::Tick, this);
+  }
 }
 
 void LocalNode::AddKnownNode(NodeID v) {
