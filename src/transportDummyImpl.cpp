@@ -60,7 +60,7 @@ void MessageClient::Send(Message* msg, NodeID peerID) {
 
 
 bool MessageClient::Receive(Message* msg) {
-  return rpc->Recieve(msg, id);
+  return rpc->Receive(msg, id);
 }
 
 void MessageClient::Broadcast(Message* msg) {

@@ -15,6 +15,7 @@ namespace DISTPROJ {
   class RPCLayer;
   class Message;
   class Slot;
+  class MessageClient;
 
   class Node {
 

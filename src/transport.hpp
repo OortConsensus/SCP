@@ -13,7 +13,7 @@ namespace DISTPROJ {
 
     public:
     virtual void Send(Message* msg, uint64_t id,  uint64_t peerID)=0;
-    virtual bool Recieve(Message* msg, uint64_t id)=0;    
+    virtual bool Receive(Message* msg, uint64_t id)=0;    
     virtual void Broadcast(Message* msg, uint64_t id)=0;
     virtual MessageClient* GetClient(NodeID id)=0;
     virtual void AddNode(NodeID node)=0;
