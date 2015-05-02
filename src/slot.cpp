@@ -19,8 +19,8 @@
 #include "quorum.hpp"
 #include "message.hpp"
 #include "slot.hpp"
-using namespace DISTPROJ;
 
+using namespace DISTPROJ;
 
 Slot::Slot(int id){
   state.slotNum = id;

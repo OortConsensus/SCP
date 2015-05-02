@@ -8,7 +8,7 @@
 namespace DISTPROJ {
 
   struct Quorum {
-    int threshhold;
+    int threshold;
     std::set<NodeID> members;
   };
 

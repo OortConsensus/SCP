@@ -3,20 +3,41 @@
 #include "transport.hpp"
 #include "transportDummyImpl.hpp"
 #include "message.hpp"
+#include "quorum.hpp"
 #include "node.hpp"
 
 using namespace DISTPROJ;
 
 int main(int argc, char **argv) {
 
+
+  FakeRPCLayer rpc = FakeRPCLayer();
+
   // Create nodes.
-  // LocalNode
+  LocalNode n1 = LocalNode(1, rpc);
+  LocalNode n2 = LocalNode(2, rpc);
+  LocalNode n3 = LocalNode(3, rpc);
+  LocalNode n4 = LocalNode(4, rpc);
+  LocalNode n5 = LocalNode(5, rpc);
 
-  const FakeRPCLayer& rpc = FakeRPCLayer();
+  // Print IDs.
+  std::cout << n1.getNodeID() << "\n";
+  std::cout << n2.getNodeID() << "\n";
+  std::cout << n3.getNodeID() << "\n";
+  std::cout << n4.getNodeID() << "\n";
+  std::cout << n5.getNodeID() << "\n";
 
-  
+  // Create quorum sets.
+  Quorum qs;
+  qs.threshold = 3;
+  qs.members = std::set<NodeID> {1, 2, 3, 4, 5};
 
-  //Node n1 = Node(1, rpc, )
+  // Add quorum sets to nodes.
+  n1.UpdateQurorum(qs);
+  n2.UpdateQurorum(qs);
+  n3.UpdateQurorum(qs);
+  n4.UpdateQurorum(qs);
+  n5.UpdateQurorum(qs);
 
 
 
