@@ -146,13 +146,13 @@ void Slot::handle(std::shared_ptr<FinishMessage> msg) {
       switch (m->type()) {
       case FinishMessage_t:
         if ((std::static_pointer_cast<FinishMessage>(m))->c == state.c){
-          b_prepared +=1;
+          b_commit +=1;
         }
           
         break;
       case PrepareMessage_t:
         if ( (std::static_pointer_cast<PrepareMessage>(m))->c == state.c){
-          b_prepared +=1;
+          b_commit +=1;
         }
         break;
       }
