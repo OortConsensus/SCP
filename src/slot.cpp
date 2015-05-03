@@ -88,9 +88,10 @@ void Slot::handle(PrepareMessage* msg) {
         switch (m->type()){
         case FinishMessage_t:
           b_prepared &= ((FinishMessage *) m)->b == state.p;
+          break;
         case PrepareMessage_t:
           b_prepared &= ((PrepareMessage *) m)->b == state.p;
-
+          break;
         }
 
       }
