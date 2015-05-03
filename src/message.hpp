@@ -29,8 +29,8 @@ namespace DISTPROJ {
 
     virtual bool follows(std::shared_ptr<Message> x) = 0;
 	
-	template<class Archive>
-	void serialize(Archive & archive);
+	// template<class Archive>
+	// void serialize(Archive & archive);
   };
   
   class PrepareMessage : public Message {
@@ -41,9 +41,10 @@ namespace DISTPROJ {
                    Ballot _p_, Ballot _c, Quorum _d)
       :  Message(PrepareMessage_t),v(_v), slotID(_slotID), b(_b), p(_p), p_(_p_), c(_c), d(_d) {};
 
-	template<class Archive>
-	void serialize(Archive & archive);
-
+    template<class Archive>
+    void serialize(Archive & archive) {
+      archive(CEREAL_NVP(v), CEREAL_NVP(slotID), CEREAL_NVP(b), CEREAL_NVP(p), CEREAL_NVP(p_), CEREAL_NVP(c), CEREAL_NVP(d));
+    };
     unsigned int getSlot() { return slotID; };
     NodeID from() {return v;};
 
@@ -65,8 +66,12 @@ namespace DISTPROJ {
     FinishMessage(NodeID _v, unsigned int _slotID, Ballot _b, Quorum _d)
       : Message(FinishMessage_t), v(_v), slotID(_slotID), b(_b), d(_d)  {};
 
-	template<class Archive>
-	void serialize(Archive & archive);
+
+
+    template<class Archive>
+    void serialize(Archive & archive) {
+      archive(CEREAL_NVP(v),CEREAL_NVP(slotID), CEREAL_NVP(b),CEREAL_NVP(d)); // serialize things by passing them to the archive
+    };
     unsigned int getSlot() { return slotID; };
     NodeID from() {return v;};
     bool follows( std::shared_ptr<Message> x);
@@ -80,7 +85,7 @@ namespace DISTPROJ {
   };
 
 }
-CEREAL_REGISTER_TYPE(DISTPROJ::FinishMessage);
-CEREAL_REGISTER_TYPE(DISTPROJ::PrepareMessage);
-CEREAL_REGISTER_TYPE(DISTPROJ::Message);
+CEREAL_REGISTER_TYPE_WITH_NAME(DISTPROJ::FinishMessage, "Finish");
+CEREAL_REGISTER_TYPE_WITH_NAME(DISTPROJ::PrepareMessage, "Prepare");
+
 #endif

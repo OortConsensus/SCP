@@ -46,7 +46,7 @@ namespace DISTPROJ {
     std::map<NodeID, std::shared_ptr<Message>> M;
     LocalNode * node;
 
-    PrepareMessage* Prepare();
+    std::shared_ptr<PrepareMessage> Prepare();
 
 
   };

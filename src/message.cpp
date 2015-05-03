@@ -2,39 +2,31 @@
 #include "slot.hpp"
 #include "quorum.hpp"
 #include <string>
+#include "cereal/archives/json.hpp"
+#include "cereal/types/polymorphic.hpp"
 
 
 using namespace DISTPROJ;
 
 
-template<class Archive>
-void PrepareMessage::serialize(Archive & archive) {
-  archive(v, slotID, b, p, p_, c, d);
-  // archive(v, slotID, b,p,p_,c,d);
-}
-
-template<class Archive>
-void FinishMessage::serialize(Archive & archive) {
-  archive(v,slotID, b,d); // serialize things by passing them to the archive
-}
 
 
-template<class Archive>
-void Message::serialize(Archive & archive) {
-  auto pm = (PrepareMessage*) this;
-  auto fm = (FinishMessage*) this;
-  switch (t) {
-  case PrepareMessage_t:
-	pm->serialize(archive);
-	break;
-  case FinishMessage_t:
-	fm->serialize(archive);
-	break;
-  default:
-	archive("grave error: Tried to serialize raw message");
-	break;
-  }
-}
+// template<class Archive>
+// void Message::serialize(Archive & archive) {
+//   auto pm = (PrepareMessage*) this;
+//   auto fm = (FinishMessage*) this;
+//   switch (t) {
+//   case PrepareMessage_t:
+// 	pm->serialize(archive);
+// 	break;
+//   case FinishMessage_t:
+// 	fm->serialize(archive);
+// 	break;
+//   default:
+// 	archive("grave error: Tried to serialize raw message");
+// 	break;
+//   }
+// }
 
 
 bool FinishMessage::follows( std::shared_ptr<Message> x) {

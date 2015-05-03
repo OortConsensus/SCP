@@ -17,9 +17,6 @@ TODO:
 	Node/Network:
 		Being able to join at any time/bootstrap
 	Message
-		toJSON
-		fromJSON
-		Change RPC Layer Queue to be using json strings
 	FakeRPCLayer -> TCPRPCLayer or UDPRPCLayer or Byzantine RPC Layer
 				 - Resending
 				 - Signing messages
@@ -27,7 +24,6 @@ TODO:
 				 - Peering
 				 - memcpy messages in fakerpc layer!
 	Memory Management
-		   - Clean up memory leaks :: Would be good to do
 
 
         
@@ -41,6 +37,9 @@ DONE:
 	State Machine
 	Node/Network:
 	Message
+		toJSON
+		fromJSON
+		Change RPC Layer Queue to be using json strings
 	FakeRPCLayer -> TCPRPCLayer or UDPRPCLayer or Byzantine RPC Layer
 	Memory Management
-
+		   - Clean up memory leaks :: Would be good to do
