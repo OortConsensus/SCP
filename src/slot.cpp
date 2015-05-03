@@ -125,6 +125,7 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
 
 			if (b_prepared > node->quorumSet.threshold){
 				state.c = state.b;
+        node->SendMessage(Finish());
 			}
 
 		}
@@ -135,10 +136,31 @@ void Slot::handle(std::shared_ptr<FinishMessage> msg) {
 	printf("Finish");
 	if (phi == PREPARE && state.b == state.p && state.b == state.c && msg->b == state.b) { // RULE 3
 		phi = FINISH;
-
+    // TODO (JHH) : Figure what if anything needs to happen here.
 	}
 	if (phi == FINISH && state.b == state.p && state.b == state.c && msg->b == state.b){ // RULE 4
-		phi = EXTERNALIZE;
+    // Check that this node ~confirms~ b.
+    auto b_commit = 0;
+    for (auto kp : M) {
+      auto m = kp.second;
+      switch (m->type()) {
+      case FinishMessage_t:
+        if ((std::static_pointer_cast<FinishMessage>(m))->c == state.c){
+          b_prepared +=1;
+        }
+          
+        break;
+      case PrepareMessage_t:
+        if ( (std::static_pointer_cast<PrepareMessage>(m))->c == state.c){
+          b_prepared +=1;
+        }
+        break;
+      }
+    }
+
+    if (b_commit > node.quorumSet.threshold) {
+      phi = EXTERNALIZE;
+    }
 	}
 
 }
