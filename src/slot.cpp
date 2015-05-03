@@ -55,30 +55,45 @@ void Slot::handle(PrepareMessage* msg) {
   }
   if (phi == PREPARE ) {
     // if( true /* && a message allows v to accept that new ballots are prepared by either of accepts 2 criteria */) {
-      // if prepared ballot then set p
-      if (msg->p > state.b){
-        state.p = msg->p;
-        returnNow = true;
-      }
-      // if prepared ballot then set p_
+    // if prepared ballot then set p
+    if (msg->p > state.b){
+      state.p = msg->p;
+      returnNow = true;
+    }
+    // if prepared ballot then set p_
 
-      if (msg->p_ > state.b){
-        state.p_ = msg->p_;
-        returnNow = true;
-      }
-      if (state.c.num != 0 && (state.p > state.c || state.p_ > state.c)) {
-        state.c.num = 0;
-        returnNow = true;
-      }
-      if (returnNow) {
+    if (msg->p_ > state.b){
+      state.p_ = msg->p_;
+      returnNow = true;
+    }
+    if (state.c.num != 0 && (state.p > state.c || state.p_ > state.c)) {
+      state.c.num = 0;
+      returnNow = true;
+    }
+    if (returnNow) {
 
-        // Send Messages out
-        return;
-      }
+      // Send Messages out
+      return;
+    }
 
     // }
-    if ( state.b != state.c && state.b == state.p && true /* V confirms b is prepared */ ) {
-      state.c = state.b;
+    if ( state.b != state.c && state.b == state.p /* V confirms b is prepared */ ) {
+
+      auto b_prepared = true;
+      for( auto kp : M){
+        auto m = kp.second;
+        switch (m->type()){
+        case FinishMessage_t:
+          b_prepared &= ((FinishMessage *) m)->b == state.p;
+        case PrepareMessage_t:
+          b_prepared &= ((PrepareMessage *) m)->b == state.p;
+
+        }
+
+      }
+      if (b_prepared){
+        state.c = state.b;
+      }
 
     }
 
