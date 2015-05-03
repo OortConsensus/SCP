@@ -85,7 +85,7 @@ void LocalNode::AddNodeToQuorum(NodeID v) {
 SlotNum LocalNode::Propose(std::string value){
   mtx.lock();
   auto i = NewSlot();
-  auto m = new PrepareMessage(id, i, Ballot{1, value}, Ballot{}, Ballot{}, Ballot{}, quorumSet); /* TODO; resending etc */
+  auto m = std::make_shared<PrepareMessage>(id, i, Ballot{1, value}, Ballot{}, Ballot{}, Ballot{}, quorumSet); /* TODO; resending etc */
   SendMessage(m);
   maxSlot++;
   mtx.unlock();
@@ -95,7 +95,7 @@ SlotNum LocalNode::NewSlot(){
   return maxSlot+1;
 }
 
-void LocalNode::SendMessage(Message* msg) {
+void LocalNode::SendMessage(std::shared_ptr<Message> msg) {
 // TODO : interface with FakeRPC.
   mc->Broadcast(msg);
 }

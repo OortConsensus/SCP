@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
   dummyBallot.num = 1;
   dummyBallot.value = "";
 
-  PrepareMessage * samplePrepareMsg = new PrepareMessage(
+  auto samplePrepareMsg = std::make_shared<PrepareMessage>(
       nodes[0]->GetNodeID(),
       0,
       dummyBallot,

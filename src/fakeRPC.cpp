@@ -26,10 +26,10 @@ MessageClient* FakeRPCLayer::GetClient(NodeID id) {
 
 
 
-void FakeRPCLayer::Send(Message* msg, NodeID id, NodeID peerID) {
+void FakeRPCLayer::Send(std::shared_ptr<Message> msg, NodeID id, NodeID peerID) {
 	std::stringstream ss;
 	cereal::JSONOutputArchive archive(ss);
-	archive(*msg);
+	// archive(msg);
 	messageQueues[peerID]->Add(ss.str());
 }
 
@@ -47,7 +47,7 @@ bool FakeRPCLayer::Receive(std::shared_ptr<Message> msg, NodeID id) {
 	}
 }
 
-void FakeRPCLayer::Broadcast(Message* msg, NodeID id) {
+void FakeRPCLayer::Broadcast(std::shared_ptr<Message> msg, NodeID id) {
 	// Client messages itself.
 	for (auto peerID : messageQueues) {
 		Send(msg, id, peerID.first);
@@ -62,7 +62,7 @@ void FakeRPCLayer::Broadcast(Message* msg, NodeID id) {
 
 MessageClient::MessageClient(NodeID id, RPCLayer* r) : id(id), rpc(r) {}
 
-void MessageClient::Send(Message* msg, NodeID peerID) {
+void MessageClient::Send(std::shared_ptr<Message> msg, NodeID peerID) {
 	rpc->Send(msg, id, peerID);
 }
 
@@ -71,7 +71,7 @@ bool MessageClient::Receive(std::shared_ptr<Message> msg) {
 	return rpc->Receive(msg, id);
 }
 
-void MessageClient::Broadcast(Message* msg) {
+void MessageClient::Broadcast(std::shared_ptr<Message> msg) {
 	rpc->Broadcast(msg, id);
 }
 
