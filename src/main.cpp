@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 
   // Make a sample message.
   Ballot dummyBallot;
-  dummyBallot.num = 0;
+  dummyBallot.num = 1;
   dummyBallot.value = "";
 
   PrepareMessage * samplePrepareMsg = new PrepareMessage(
@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
 
 
 
-  std::cout << "Implementation coming soon\n";
+  printf("Implementation coming soon\n");
   while (true){
 
 

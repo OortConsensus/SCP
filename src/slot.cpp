@@ -44,10 +44,10 @@ void Slot::handle(Message* _msg){
     }catch(std::out_of_range){
       M[pmsg->from()] = new PrepareMessage(pmsg->from(), 0, Ballot{}, Ballot{}, Ballot{}, Ballot{}, Quorum{});
     }
-
     try {
       last = M.at(pmsg->from());
-      if (pmsg > last) {
+      
+      if (pmsg->follows(last)) {
         M[pmsg->from()] = pmsg;
         handle(pmsg);
       }
@@ -64,7 +64,7 @@ void Slot::handle(Message* _msg){
 
     try {
       last = M.at(fmsg->from());
-      if (fmsg > last) {
+      if (fmsg->follows(last)) {
         M[fmsg->from()] = fmsg;
         handle(fmsg);
       }
