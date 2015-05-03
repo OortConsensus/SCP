@@ -58,20 +58,24 @@ void Slot::handle(PrepareMessage* msg) {
       // if prepared ballot then set p
       if (msg->p > state.b){
         state.p = msg->p;
-
+        returnNow = true;
       }
+      // if prepared ballot then set p_
 
       if (msg->p_ > state.b){
         state.p_ = msg->p_;
+        returnNow = true;
       }
-      // if prepared ballot then set p_
       if (state.c.num != 0 && (state.p > state.c || state.p_ > state.c)) {
         state.c.num = 0;
+        returnNow = true;
+      }
+      if (returnNow) {
+
+        // Send Messages out
+        return;
       }
 
-
-      
-          
     // }
     if ( state.b != state.c && state.b == state.p && true /* V confirms b is prepared */ ) {
       state.c = state.b;
