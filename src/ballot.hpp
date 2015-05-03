@@ -1,13 +1,23 @@
 #ifndef BALLOT_H
 #define BALLOT_H
 
+#include <cstdio>
+#include <iostream>
+#include <sstream>  
+
+
+ 
 namespace DISTPROJ {
 
   struct Ballot {
-    int num;
+    uint32_t num;
     std::string value;
-
+	template<class Archive>
+	void serialize(Archive & archive) {
+	  archive(num, value ); // serialize things by passing them to the archive
+	};
   };
+
   inline bool operator==(const Ballot& lhs, const Ballot& rhs) {
     return lhs.num == rhs.num && lhs.value == rhs.value;
   }

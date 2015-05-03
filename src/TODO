@@ -5,7 +5,6 @@ TODO:
 		   - incrementing ballots?
 	Proposer Function to make new ballots
 			 - Use light HashCash for random timeouts?
-			 - Picking a slot
 	Writeup Paper:
 			- Why we chose C++
 			- Journey into Stellar/Our summary of how the protocol works
@@ -34,5 +33,14 @@ TODO:
         
 
 
-
+DONE:
+	Finish Consensus Stuff:
+	Proposer Function to make new ballots
+			 - Picking a slot
+	Writeup Paper:
+	State Machine
+	Node/Network:
+	Message
+	FakeRPCLayer -> TCPRPCLayer or UDPRPCLayer or Byzantine RPC Layer
+	Memory Management
 

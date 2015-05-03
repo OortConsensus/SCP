@@ -3,6 +3,7 @@
 #include "quorum.hpp"
 #include <string>
 
+
 using namespace DISTPROJ;
 
 // Message fromJSON(std::string s){
@@ -17,3 +18,10 @@ std::string PrepareMessage::toJSON(){
 std::string FinishMessage::toJSON(){
   return "";
 }
+
+
+template<class Archive>
+void PrepareMessage::serialize(Archive & archive) {
+  archive(v, slotID, b, p, p_, c, d);
+  // archive(v, slotID, b,p,p_,c,d);
+};

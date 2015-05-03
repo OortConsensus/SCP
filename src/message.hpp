@@ -6,6 +6,9 @@
 #include "ballot.hpp"
 #include "quorum.hpp"
 #include "common.hpp"
+#include "cereal/cereal.hpp"
+#include "cereal/archives/json.hpp"
+#include "cereal/types/polymorphic.hpp"
 
 namespace DISTPROJ {
 
@@ -30,9 +33,15 @@ namespace DISTPROJ {
   class PrepareMessage : public Message {
 
   public:
+	PrepareMessage() :
+	  PrepareMessage(0,0,Ballot{}, Ballot{}, Ballot{}, Ballot{}, Quorum{}){
+	};
     PrepareMessage(NodeID _v, SlotNum _slotID, Ballot _b, Ballot _p,
                    Ballot _p_, Ballot _c, Quorum _d)
       :  Message(PrepareMessage_t),v(_v), slotID(_slotID), b(_b), p(_p), p_(_p_), c(_c), d(_d) {};
+
+	template<class Archive>
+	void serialize(Archive & archive);
 
     unsigned int getSlot() { return slotID; };
     std::string toJSON();
@@ -70,8 +79,16 @@ namespace DISTPROJ {
   class FinishMessage : public Message {
     
   public:
+	FinishMessage():
+	  FinishMessage(0,0,Ballot{}, Quorum{}){
+	};
     FinishMessage(NodeID _v, unsigned int _slotID, Ballot _b, Quorum _d)
       : Message(FinishMessage_t), v(_v), slotID(_slotID), b(_b), d(_d)  {};
+
+	template<class Archive>
+	void serialize(Archive & archive) {
+	  archive(v,slotID, b,d); // serialize things by passing them to the archive
+	};
 
     unsigned int getSlot() { return slotID; };
     std::string toJSON();
@@ -98,5 +115,7 @@ namespace DISTPROJ {
   };
 
 }
+CEREAL_REGISTER_TYPE(DISTPROJ::FinishMessage);
+CEREAL_REGISTER_TYPE(DISTPROJ::PrepareMessage);
 
 #endif

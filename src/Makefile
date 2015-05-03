@@ -1,7 +1,7 @@
 # define the C compiler to use
 CC = gcc
 CXX = g++
-CFLAGS = -Wall -g -std=c++11
+CFLAGS = -Wall -g -std=c++11 -I .
 # define any directories containing header files other than /usr/include, e.g. -I
 INCLUDES =
 # define library paths in addition to /usr/lib, e.g. -L
@@ -15,7 +15,7 @@ MAIN = main
 
 .PHONY: clean
 
-all:$(MAIN)
+all:$(MAIN) 
 	@echo  Stellar has been compiled
 
 $(MAIN): $(OBJS) 
@@ -27,3 +27,8 @@ $(MAIN): $(OBJS)
 clean:
 	$(RM) *.o *~ $(MAIN)
 
+
+cereal:
+	git clone https://github.com/USCiLab/cereal.git cer
+	cp -r cer/include/cereal .
+	rm -rf cer
