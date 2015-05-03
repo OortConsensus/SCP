@@ -100,18 +100,16 @@ void Slot::handle(PrepareMessage* msg) {
     if ( state.b != state.c && state.b == state.p /* V confirms b is prepared */ ) {
 
       auto b_prepared = true;
-      for( auto kp : M){
-        auto m = kp.second;
-        switch (m->type()){
-        case FinishMessage_t:
-          b_prepared &= ((FinishMessage *) m)->b == state.p;
-          break;
-        case PrepareMessage_t:
-          b_prepared &= ((PrepareMessage *) m)->b == state.p;
-          break;
-        }
-
+      auto last = M[msg->from()];
+      switch (m->type()){
+      case FinishMessage_t:
+        b_prepared &= ((FinishMessage *) m)->b == state.p;
+        break;
+      case PrepareMessage_t:
+        b_prepared &= ((PrepareMessage *) m)->b == state.p;
+        break;
       }
+
       if (b_prepared){
         state.c = state.b;
       }
