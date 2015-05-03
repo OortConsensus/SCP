@@ -8,7 +8,7 @@
 
 #include "common.hpp"
 #include "queue.hpp"
-#include "transport.hpp"
+#include "RPC.hpp"
 
 namespace DISTPROJ {
 

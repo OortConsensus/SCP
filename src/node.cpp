@@ -3,7 +3,7 @@
 #include <set>
 
 #include "message.hpp"
-#include "transportDummyImpl.hpp"
+#include "fakeRPC.hpp"
 #include "quorum.hpp"
 #include "slot.hpp"
 #include "node.hpp"
