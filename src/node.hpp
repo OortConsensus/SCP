@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <cstdint>
 #include <thread>
+#include <mutex>
 
 #include "common.hpp"
 #include "quorum.hpp"
@@ -47,6 +48,7 @@ namespace DISTPROJ {
     void UpdateQurorum(Quorum quorumSet);
 
     void Start();
+    SlotNum Propose(std::string value);
     void SendMessage(Message* msg);
     bool ReceiveMessage(Message ** msg);
     void ProcessMessage(Message* msg);
@@ -54,6 +56,9 @@ namespace DISTPROJ {
     void DumpLog();
 
   private:
+	SlotNum maxSlot;
+	std::mutex mtx;
+	SlotNum NewSlot(); // only one of these can run at a time
     void Tick();
     std::map<unsigned int, Slot*> log;
     std::set<NodeID> knownNodes;

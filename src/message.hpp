@@ -30,7 +30,7 @@ namespace DISTPROJ {
   class PrepareMessage : public Message {
 
   public:
-    PrepareMessage(NodeID _v, unsigned int _slotID, Ballot _b, Ballot _p,
+    PrepareMessage(NodeID _v, SlotNum _slotID, Ballot _b, Ballot _p,
                    Ballot _p_, Ballot _c, Quorum _d)
       :  Message(PrepareMessage_t),v(_v), slotID(_slotID), b(_b), p(_p), p_(_p_), c(_c), d(_d) {};
 

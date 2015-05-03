@@ -51,12 +51,14 @@ LocalNode::LocalNode(NodeID _id, RPCLayer& _rpc, Quorum _quorumSet)
 void LocalNode::Tick() {
   Message * m = nullptr;
   while (true){
+	mtx.lock();
     if (ReceiveMessage(&m)) {
 
       ProcessMessage(m);
 
 
     }
+	mtx.unlock();
     std::this_thread::sleep_for(std::chrono::seconds(1));
   }
 }
@@ -80,6 +82,19 @@ void LocalNode::AddNodeToQuorum(NodeID v) {
   quorumSet.members.insert(v);
 }
 
+SlotNum LocalNode::Propose(std::string value){
+  mtx.lock();
+  auto i = NewSlot();
+  auto m = new PrepareMessage(id, i, Ballot{1, value}, Ballot{}, Ballot{}, Ballot{}, quorumSet); /* TODO; resending etc */
+  SendMessage(m);
+  maxSlot++;
+  mtx.unlock();
+  return i;
+}
+SlotNum LocalNode::NewSlot(){
+  return maxSlot+1;
+}
+
 void LocalNode::SendMessage(Message* msg) {
 // TODO : interface with FakeRPC.
   mc->Broadcast(msg);
@@ -97,8 +112,12 @@ bool LocalNode::ReceiveMessage(Message ** msg) {
 }
 
 void LocalNode::ProcessMessage(Message* msg) {
-  if (log.find(msg->getSlot()) == log.end()) {
-    log[msg->getSlot()] = new Slot(msg->getSlot(), this);
+  auto slot = msg -> getSlot();
+  if (log.find(slot) == log.end()) {
+    log[slot] = new Slot(slot, this);
+	if (slot > maxSlot) {
+	  maxSlot = slot;
+	}
   }
   log[msg->getSlot()]->handle(msg);
 }
