@@ -75,6 +75,7 @@ namespace DISTPROJ {
 
     unsigned int getSlot() { return slotID; };
     std::string toJSON();
+    NodeID from() {return v;};
     bool follows( Message * x) {
       auto m = (FinishMessage *) x;
       switch (x->type()){

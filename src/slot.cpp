@@ -31,32 +31,56 @@ PrepareMessage* Slot::Prepare() {
   return p;
 }
 
-void Slot::handle(Message* msg){
+void Slot::handle(Message* _msg){
   // Add the message to be the last message seen
   // Handle the response
-  switch (msg->type()) {
+  Message* last;
+  auto fmsg =(FinishMessage*) _msg;
+  auto pmsg = (PrepareMessage*) _msg;
+  switch (_msg->type()) {
   case PrepareMessage_t:
-    handle((PrepareMessage*) msg);
+    try {
+      M.at(pmsg->from());
+    }catch(std::out_of_range){
+      M[pmsg->from()] = new PrepareMessage(pmsg->from(), 0, Ballot{}, Ballot{}, Ballot{}, Ballot{}, Quorum{});
+    }
+
+    try {
+      last = M.at(pmsg->from());
+      if (pmsg > last) {
+        M[pmsg->from()] = pmsg;
+        handle(pmsg);
+      }
+    }catch(std::out_of_range){
+      M[pmsg->from()] = pmsg;
+    }
     break;
   case FinishMessage_t:
-    handle((FinishMessage*) msg);
+    try {
+      M.at(fmsg->from());
+    }catch(std::out_of_range){
+      M[fmsg->from()] = new PrepareMessage(fmsg->from(), 0, Ballot{}, Ballot{}, Ballot{}, Ballot{}, Quorum{});
+    }
+
+    try {
+      last = M.at(fmsg->from());
+      if (fmsg > last) {
+        M[fmsg->from()] = fmsg;
+        handle(fmsg);
+      }
+    }catch(std::out_of_range){
+      M[fmsg->from()] = fmsg;
+    }
     break;
   default:
     printf("GARBAGE");
     break;
   }
+
 }
 void Slot::handle(PrepareMessage* msg) {
   printf("PREPARE");
   bool returnNow = false;
-  Message* last;
-  try {
-    last = M.at(msg->from());
-    M[msg->from()] = msg;
-  }catch(std::out_of_range){
-    M[msg->from()] = msg;
-    last = msg;
-  }
   if (phi == PREPARE ) {
     // if( true /* && a message allows v to accept that new ballots are prepared by either of accepts 2 criteria */) {
     // if prepared ballot then set p
