@@ -24,7 +24,6 @@ namespace DISTPROJ {
   public:
     Message(MessageType t) : t(t){};
     MessageType type() { return t;};
-    virtual std::string toJSON()=0;
     // Message f(std::string s);
     virtual unsigned int getSlot() = 0;
 
@@ -37,9 +36,7 @@ namespace DISTPROJ {
   class PrepareMessage : public Message {
 
   public:
-	PrepareMessage() :
-	  PrepareMessage(0,0,Ballot{}, Ballot{}, Ballot{}, Ballot{}, Quorum{}){
-	};
+	PrepareMessage() : PrepareMessage(0,0,Ballot{}, Ballot{}, Ballot{}, Ballot{}, Quorum{}){};
     PrepareMessage(NodeID _v, SlotNum _slotID, Ballot _b, Ballot _p,
                    Ballot _p_, Ballot _c, Quorum _d)
       :  Message(PrepareMessage_t),v(_v), slotID(_slotID), b(_b), p(_p), p_(_p_), c(_c), d(_d) {};
@@ -48,28 +45,9 @@ namespace DISTPROJ {
 	void serialize(Archive & archive);
 
     unsigned int getSlot() { return slotID; };
-    std::string toJSON();
     NodeID from() {return v;};
-    bool follows( std::shared_ptr<Message> x) {
-      auto m = std::static_pointer_cast<PrepareMessage>(x);
-      auto first = b.num > m->b.num;
-      auto first_continue = b.num == m->b.num;
-      auto second = p.num > m->p.num;
-      auto second_continue = p.num == m->p.num;
-      auto third = p_.num > m->p_.num;
-      auto third_continue =p_.num == m->p_.num;
-      auto fourth = c.num > m->c.num;
 
-      switch (x->type()){
-      case FinishMessage_t:
-        return false;
-      case PrepareMessage_t:
-        return first || (  first_continue && (second || (second_continue && (third || (third_continue && fourth))))); // See SCP pg 29
-      default:
-        return true; 
-      }
-    }
-
+    bool follows( std::shared_ptr<Message> x);
   private:
     NodeID v;
     unsigned int slotID;
@@ -83,32 +61,15 @@ namespace DISTPROJ {
   class FinishMessage : public Message {
     
   public:
-	FinishMessage():
-	  FinishMessage(0,0,Ballot{}, Quorum{}){
-	};
+	FinishMessage(): FinishMessage(0,0,Ballot{}, Quorum{}){};
     FinishMessage(NodeID _v, unsigned int _slotID, Ballot _b, Quorum _d)
       : Message(FinishMessage_t), v(_v), slotID(_slotID), b(_b), d(_d)  {};
 
 	template<class Archive>
-	void serialize(Archive & archive) {
-	  archive(v,slotID, b,d); // serialize things by passing them to the archive
-	};
-
+	void serialize(Archive & archive);
     unsigned int getSlot() { return slotID; };
-    std::string toJSON();
     NodeID from() {return v;};
-    bool follows( std::shared_ptr<Message> x) {
-      auto m = std::static_pointer_cast<FinishMessage>( x);
-      switch (x->type()){
-      case FinishMessage_t:
-        return b.num > m->b.num;
-      case PrepareMessage_t:
-        return true;
-      default:
-        return true; 
-      }
-    }
-
+    bool follows( std::shared_ptr<Message> x);
   private:
     NodeID v;
     unsigned int slotID;
@@ -119,8 +80,7 @@ namespace DISTPROJ {
   };
 
 }
-CEREAL_REGISTER_TYPE(DISTPROJ::Message);
 CEREAL_REGISTER_TYPE(DISTPROJ::FinishMessage);
 CEREAL_REGISTER_TYPE(DISTPROJ::PrepareMessage);
-
+CEREAL_REGISTER_TYPE(DISTPROJ::Message);
 #endif
