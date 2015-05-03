@@ -47,6 +47,7 @@ namespace DISTPROJ {
     LocalNode * node;
 
     PrepareMessage* Prepare();
+    FinishMessage* Finish();
 
 
   };

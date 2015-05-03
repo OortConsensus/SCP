@@ -28,8 +28,13 @@ Slot::Slot(int id, LocalNode* m) : phi(PREPARE), node(m){
 }
 
 PrepareMessage* Slot::Prepare() {
-	auto p = new PrepareMessage(node->GetNodeID(), state.slotNum, state.b, state.p, state.p_, state.c, Quorum{}); 
+	auto p = new PrepareMessage(node->GetNodeID(), state.slotNum, state.b, state.p, state.p_, state.c, node->GetQuorumSet()); 
 	return p;
+}
+
+FinishMessage* Slot::Finish() {
+  auto p = new FinishMessage(node_>GetNodeID(), state.slotNum, state.b, node->GetQuorumSet());
+  return p;
 }
 
 void Slot::handle(std::shared_ptr<Message> _msg){
