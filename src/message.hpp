@@ -39,7 +39,7 @@ namespace DISTPROJ {
     NodeID from() {return v;};
     bool follows( Message * x) {
       auto m = (PrepareMessage *) x;
-      auto first =b.num > m->b.num ;
+      auto first = b.num > m->b.num;
       auto first_continue = b.num == m->b.num;
       auto second = p.num > m->p.num;
       auto second_continue = p.num == m->p.num;
