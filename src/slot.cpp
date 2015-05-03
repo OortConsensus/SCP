@@ -40,35 +40,27 @@ void Slot::handle(Message* _msg){
   switch (_msg->type()) {
   case PrepareMessage_t:
     try {
-      M.at(pmsg->from());
-    }catch(std::out_of_range){
-      M[pmsg->from()] = new PrepareMessage(pmsg->from(), 0, Ballot{}, Ballot{}, Ballot{}, Ballot{}, Quorum{});
-    }
-    try {
       last = M.at(pmsg->from());
-      
-      if (pmsg->follows(last)) {
-        M[pmsg->from()] = pmsg;
-        handle(pmsg);
-      }
     }catch(std::out_of_range){
+      last = new PrepareMessage(pmsg->from(), 0, Ballot{}, Ballot{}, Ballot{}, Ballot{}, Quorum{});
+      M[pmsg->from()] = last;
+        }
+      
+    if (pmsg->follows(last)) {
+      handle(pmsg);
       M[pmsg->from()] = pmsg;
     }
     break;
   case FinishMessage_t:
     try {
-      M.at(fmsg->from());
+      last = M.at(fmsg->from());
     }catch(std::out_of_range){
-      M[fmsg->from()] = new PrepareMessage(fmsg->from(), 0, Ballot{}, Ballot{}, Ballot{}, Ballot{}, Quorum{});
+      last = new PrepareMessage(fmsg->from(), 0, Ballot{}, Ballot{}, Ballot{}, Ballot{}, Quorum{});
+      M[fmsg->from()] = last;
     }
 
-    try {
-      last = M.at(fmsg->from());
-      if (fmsg->follows(last)) {
-        M[fmsg->from()] = fmsg;
-        handle(fmsg);
-      }
-    }catch(std::out_of_range){
+    if (fmsg->follows(last)) {
+      handle(fmsg);
       M[fmsg->from()] = fmsg;
     }
     break;
