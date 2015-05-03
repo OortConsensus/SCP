@@ -98,7 +98,7 @@ bool LocalNode::ReceiveMessage(Message ** msg) {
 
 void LocalNode::ProcessMessage(Message* msg) {
   if (log.find(msg->getSlot()) == log.end()) {
-    log[msg->getSlot()] = new Slot(msg->getSlot());
+    log[msg->getSlot()] = new Slot(msg->getSlot(), this);
   }
   log[msg->getSlot()]->handle(msg);
 }

@@ -13,7 +13,7 @@ namespace DISTPROJ {
   class Message;
   class PrepareMessage;
   class FinishMessage;
-
+  class LocalNode;
   enum Phase { PREPARE, FINISH, EXTERNALIZE };
 
   struct SlotState {
@@ -27,26 +27,29 @@ namespace DISTPROJ {
 
   class Slot {
 
-    public:
-      Slot(int id);
+  public:
+    Slot(int id, LocalNode* m);
 
-      void handle(Message* msg);
+    void handle(Message* msg);
 
-      // Dump state / received message inforamtion.
-      void Dump();
+    // Dump state / received message inforamtion.
+    void Dump();
 
-    private:
-      void handle(PrepareMessage* msg);
-      void handle(FinishMessage* msg);
-      // void handlePrepare(NodeID v, Quorum& d, SlotState vState);
-      // void handleFinish(NodeID v, Quorum& d, SlotState vState);
+  private:
+    void handle(PrepareMessage* msg);
+    void handle(FinishMessage* msg);
+    // void handlePrepare(NodeID v, Quorum& d, SlotState vState);
+    // void handleFinish(NodeID v, Quorum& d, SlotState vState);
 
-      SlotState state;
-      Phase phi;
-      std::map<NodeID, Message*> M;
+    SlotState state;
+    Phase phi;
+    std::map<NodeID, Message*> M;
+    LocalNode * node;
+
+    PrepareMessage* Prepare();
+
 
   };
-
 }
 
 #endif

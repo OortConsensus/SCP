@@ -20,12 +20,15 @@
 #include "quorum.hpp"
 #include "message.hpp"
 #include "slot.hpp"
-
 using namespace DISTPROJ;
 
-Slot::Slot(int id){
+Slot::Slot(int id, LocalNode* m) : node(m), phi(PREPARE){
   state.slotNum = id;
-  phi = PREPARE;
+}
+
+PrepareMessage* Slot::Prepare() {
+  auto p = new PrepareMessage(node->GetNodeID(), state.slotNum, state.b, state.p, state.p_, state.c, Quorum{}); 
+  return p;
 }
 
 void Slot::handle(Message* msg){
@@ -71,9 +74,9 @@ void Slot::handle(PrepareMessage* msg) {
       returnNow = true;
     }
     if (returnNow) {
-
-      // Send Messages out
+      node->SendMessage(Prepare());
       return;
+
     }
 
     // }

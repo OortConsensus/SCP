@@ -56,7 +56,7 @@ namespace DISTPROJ {
     void Tick();
     std::map<unsigned int, Slot*> log;
     std::set<NodeID> knownNodes;
-    MessageClient* mc;
+    MessageClient * mc;
 
   };
 

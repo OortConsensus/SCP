@@ -40,6 +40,7 @@ namespace DISTPROJ {
     void Send(Message* msg, NodeID peerID);
     bool Receive(Message** msg);    
     void Broadcast(Message* msg);
+    NodeID GetNodeID(){return id;};
   };
 
 }
