@@ -47,6 +47,7 @@ namespace DISTPROJ {
     LocalNode * node;
 
     std::shared_ptr<PrepareMessage> Prepare();
+    std::shared_ptr<FinishMessage> Finish();
 
 
   };
