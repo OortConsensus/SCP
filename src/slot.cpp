@@ -52,6 +52,7 @@ void Slot::handle(PrepareMessage* msg) {
   Message* last;
   try {
     last = M.at(msg->from());
+    M[msg->from()] = msg;
   }catch(std::out_of_range){
     M[msg->from()] = msg;
     last = msg;
