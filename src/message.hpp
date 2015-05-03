@@ -39,13 +39,19 @@ namespace DISTPROJ {
     NodeID from() {return v;};
     bool follows( Message * x) {
       auto m = (PrepareMessage *) x;
+      auto first =b.num > m->b.num ;
+      auto first_continue = b.num == m->b.num;
+      auto second = p.num > m->p.num;
+      auto second_continue = p.num == m->p.num;
+      auto third = p_.num > m->p_.num;
+      auto third_continue =p_.num == m->p_.num;
+      auto fourth = c.num > m->c.num;
+
       switch (x->type()){
       case FinishMessage_t:
         return false;
       case PrepareMessage_t:
-        return b.num > m->b.num || ( b.num == m->b.num && (p.num >
-        m->p.num || (p.num == m->p.num && (p_.num > m->p_.num || (p_.num
-        == m->p_.num && c.num > m->c.num))))); // See SCP pg 29
+        return first || (  first_continue && (second || (second_continue && (third || (third_continue && fourth))))); // See SCP pg 29
       default:
         return true; 
       }
