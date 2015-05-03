@@ -26,8 +26,20 @@ Slot::Slot(int id){
   state.slotNum = id;
 }
 
-void Slot::handle(Message& msg){
+void Slot::handle(Message* msg){
   // TODO
+  //      
+  switch (msg->type()) {
+    case PrepareMessage_t:
+      printf("PREPARE");
+      break;
+    case FinishMessage_t:
+      printf("FINISH");
+      break;
+    default:
+      printf("GARBAGE");
+      break;
+    }
 }
 
 // Dump state / received message inforamtion.

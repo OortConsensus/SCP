@@ -30,7 +30,7 @@ Quorum Node::GetQuorumSet() {
 }
 
 void Node::PrintQuorumSet() {
-  printf("Printing quorum set for node %i \n", id);
+  printf("Printing quorum set for node %llu \n", id);
   printf("Threshold: %i ", quorumSet.threshold);
   printf("Quorum members : \n");
   std::set<NodeID>::iterator iter;
@@ -52,18 +52,9 @@ void LocalNode::Tick() {
   Message * m = nullptr;
   while (true){
     if (ReceiveMessage(&m)) {
-      
-      switch (m->type()) {
-      case PrepareMessage_t:
-        printf("PREPARE");
-        break;
-      case FinishMessage_t:
-        printf("FINISH");
-        break;
-      default:
-        printf("GARBAGE");
-        break;
-      }
+
+      ProcessMessage(m);
+
 
     }
     std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -105,11 +96,11 @@ bool LocalNode::ReceiveMessage(Message ** msg) {
   return false;
 }
 
-void LocalNode::ProcessMessage(Message& msg) {
-  if (log.find(msg.getSlot()) == log.end()) {
-    log[msg.getSlot()] = new Slot(msg.getSlot());
+void LocalNode::ProcessMessage(Message* msg) {
+  if (log.find(msg->getSlot()) == log.end()) {
+    log[msg->getSlot()] = new Slot(msg->getSlot());
   }
-  log[msg.getSlot()]->handle(msg);
+  log[msg->getSlot()]->handle(msg);
 }
 
 void LocalNode::DumpLog() {
