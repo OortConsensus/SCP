@@ -15,6 +15,8 @@ namespace DISTPROJ {
   enum MessageType {FinishMessage_t=0, PrepareMessage_t=1};
   
   class Slot;
+  class FinishMessage;
+  class PrepareMessage;
   class Message {
   private:
     MessageType t;
@@ -26,8 +28,10 @@ namespace DISTPROJ {
     // Message f(std::string s);
     virtual unsigned int getSlot() = 0;
 
-    virtual bool follows(Message * x) = 0;
-
+    virtual bool follows(std::shared_ptr<Message> x) = 0;
+	
+	template<class Archive>
+	void serialize(Archive & archive);
   };
   
   class PrepareMessage : public Message {
@@ -46,8 +50,8 @@ namespace DISTPROJ {
     unsigned int getSlot() { return slotID; };
     std::string toJSON();
     NodeID from() {return v;};
-    bool follows( Message * x) {
-      auto m = (PrepareMessage *) x;
+    bool follows( std::shared_ptr<Message> x) {
+      auto m = std::static_pointer_cast<PrepareMessage>(x);
       auto first = b.num > m->b.num;
       auto first_continue = b.num == m->b.num;
       auto second = p.num > m->p.num;
@@ -93,8 +97,8 @@ namespace DISTPROJ {
     unsigned int getSlot() { return slotID; };
     std::string toJSON();
     NodeID from() {return v;};
-    bool follows( Message * x) {
-      auto m = (FinishMessage *) x;
+    bool follows( std::shared_ptr<Message> x) {
+      auto m = std::static_pointer_cast<FinishMessage>( x);
       switch (x->type()){
       case FinishMessage_t:
         return b.num > m->b.num;
@@ -115,6 +119,7 @@ namespace DISTPROJ {
   };
 
 }
+CEREAL_REGISTER_TYPE(DISTPROJ::Message);
 CEREAL_REGISTER_TYPE(DISTPROJ::FinishMessage);
 CEREAL_REGISTER_TYPE(DISTPROJ::PrepareMessage);
 

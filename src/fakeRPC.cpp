@@ -1,5 +1,7 @@
 
 #include <vector>
+#include <sstream>
+#include <cstdio>
 #include "queue.hpp"
 #include "RPC.hpp"
 #include "node.hpp"
@@ -12,11 +14,11 @@ using namespace DISTPROJ;
 FakeRPCLayer::FakeRPCLayer(){}
 
 void FakeRPCLayer::AddNode(NodeID node) {
-  messageQueues[node] = new Queue<Message*>();
+	messageQueues[node] = new Queue<std::string>();
 }
 
 MessageClient* FakeRPCLayer::GetClient(NodeID id) {
-  return new MessageClient(id, this); 
+	return new MessageClient(id, this); 
 }
 
 
@@ -25,25 +27,31 @@ MessageClient* FakeRPCLayer::GetClient(NodeID id) {
 
 
 void FakeRPCLayer::Send(Message* msg, NodeID id, NodeID peerID) {
-  messageQueues[peerID]->Add(msg);
+	std::stringstream ss;
+	cereal::JSONOutputArchive archive(ss);
+	archive(*msg);
+	messageQueues[peerID]->Add(ss.str());
 }
 
 
-bool FakeRPCLayer::Receive(Message** msg, NodeID id) {
-  // We only have 1 thread dequeing so this is chill.
-  if (messageQueues[id]->Empty()) {
-    return false;
-  } else {
-    *msg = messageQueues[id]->Get();
-    return *msg; // implicitly checks for validity
-  }
+bool FakeRPCLayer::Receive(std::shared_ptr<Message> msg, NodeID id) {
+	// We only have 1 thread dequeing so this is chill.
+	if (messageQueues[id]->Empty()) {
+		return false;
+	} else {
+		std::stringstream ss;
+		ss << messageQueues[id]->Get();
+		cereal::JSONInputArchive archive(ss);
+		archive(msg);
+		return true && msg; // implicitly checks for validity
+	}
 }
 
 void FakeRPCLayer::Broadcast(Message* msg, NodeID id) {
-  // Client messages itself.
-  for (auto peerID : messageQueues) {
-    Send(msg, id, peerID.first);
-  }
+	// Client messages itself.
+	for (auto peerID : messageQueues) {
+		Send(msg, id, peerID.first);
+	}
 }
 
 
@@ -55,15 +63,15 @@ void FakeRPCLayer::Broadcast(Message* msg, NodeID id) {
 MessageClient::MessageClient(NodeID id, RPCLayer* r) : id(id), rpc(r) {}
 
 void MessageClient::Send(Message* msg, NodeID peerID) {
-  rpc->Send(msg, id, peerID);
+	rpc->Send(msg, id, peerID);
 }
 
 
-bool MessageClient::Receive(Message** msg) {
-  return rpc->Receive(msg, id);
+bool MessageClient::Receive(std::shared_ptr<Message> msg) {
+	return rpc->Receive(msg, id);
 }
 
 void MessageClient::Broadcast(Message* msg) {
-  rpc->Broadcast(msg, id);
+	rpc->Broadcast(msg, id);
 }
 

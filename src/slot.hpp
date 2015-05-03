@@ -30,20 +30,20 @@ namespace DISTPROJ {
   public:
     Slot(int id, LocalNode* m);
 
-    void handle(Message* msg);
+    void handle(std::shared_ptr<Message> msg);
 
     // Dump state / received message inforamtion.
     void Dump();
 
   private:
-    void handle(PrepareMessage* msg);
-    void handle(FinishMessage* msg);
+    void handle(std::shared_ptr<PrepareMessage> msg);
+    void handle(std::shared_ptr<FinishMessage> msg);
     // void handlePrepare(NodeID v, Quorum& d, SlotState vState);
     // void handleFinish(NodeID v, Quorum& d, SlotState vState);
 
     SlotState state;
     Phase phi;
-    std::map<NodeID, Message*> M;
+    std::map<NodeID, std::shared_ptr<Message>> M;
     LocalNode * node;
 
     PrepareMessage* Prepare();

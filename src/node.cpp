@@ -49,10 +49,10 @@ LocalNode::LocalNode(NodeID _id, RPCLayer& _rpc, Quorum _quorumSet)
   }; 
 
 void LocalNode::Tick() {
-  Message * m = nullptr;
+  std::shared_ptr<Message> m;
   while (true){
 	mtx.lock();
-    if (ReceiveMessage(&m)) {
+    if (ReceiveMessage(m)) {
 
       ProcessMessage(m);
 
@@ -100,9 +100,9 @@ void LocalNode::SendMessage(Message* msg) {
   mc->Broadcast(msg);
 }
 
-bool LocalNode::ReceiveMessage(Message ** msg) {
+bool LocalNode::ReceiveMessage(std::shared_ptr<Message> msg) {
   bool received = mc->Receive(msg);
-  if (received && *msg) {
+  if (received && msg) {
 
     // PRINT here just to show we got it 
     printf("Got a message\n");
@@ -111,7 +111,7 @@ bool LocalNode::ReceiveMessage(Message ** msg) {
   return false;
 }
 
-void LocalNode::ProcessMessage(Message* msg) {
+void LocalNode::ProcessMessage(std::shared_ptr<Message> msg) {
   auto slot = msg -> getSlot();
   if (log.find(slot) == log.end()) {
     log[slot] = new Slot(slot, this);
