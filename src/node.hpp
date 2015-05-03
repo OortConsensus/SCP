@@ -32,6 +32,7 @@ namespace DISTPROJ {
     RPCLayer& rpc;
     Quorum quorumSet;
     std::thread * t;
+    friend Slot;
 
   };
 

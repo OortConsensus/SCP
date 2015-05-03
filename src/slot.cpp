@@ -44,7 +44,7 @@ void Slot::handle(Message* _msg){
     }catch(std::out_of_range){
       last = new PrepareMessage(pmsg->from(), 0, Ballot{}, Ballot{}, Ballot{}, Ballot{}, Quorum{});
       M[pmsg->from()] = last;
-        }
+    }
       
     if (pmsg->follows(last)) {
       handle(pmsg);
@@ -71,7 +71,7 @@ void Slot::handle(Message* _msg){
 
 }
 void Slot::handle(PrepareMessage* msg) {
-  printf("PREPARE");
+  printf("PREPARE\n");
   bool returnNow = false;
   if (phi == PREPARE ) {
     // if( true /* && a message allows v to accept that new ballots are prepared by either of accepts 2 criteria */) {
@@ -99,18 +99,25 @@ void Slot::handle(PrepareMessage* msg) {
     // }
     if ( state.b != state.c && state.b == state.p /* V confirms b is prepared */ ) {
 
-      auto b_prepared = true;
-      auto last = M[msg->from()];
-      switch (m->type()){
-      case FinishMessage_t:
-        b_prepared &= ((FinishMessage *) m)->b == state.p;
-        break;
-      case PrepareMessage_t:
-        b_prepared &= ((PrepareMessage *) m)->b == state.p;
-        break;
+      auto b_prepared = 0;
+      for(auto kp : M) {
+        auto m = kp.second;
+        switch (m->type()){
+        case FinishMessage_t:
+          if (((FinishMessage *) m)->b == state.p){
+            b_prepared +=1;
+          }
+            
+          break;
+        case PrepareMessage_t:
+          if ( ((PrepareMessage *) m)->b == state.p){
+            b_prepared +=1;
+          }
+          break;
+        }
       }
 
-      if (b_prepared){
+      if (b_prepared > node->quorumSet.threshold){
         state.c = state.b;
       }
 

@@ -7,6 +7,8 @@
 #include "quorum.hpp"
 #include "node.hpp"
 #include "ballot.hpp"
+#include <chrono>
+#include <thread>
 
 using namespace DISTPROJ;
 const int N = 6;
@@ -57,6 +59,9 @@ int main(int argc, char **argv) {
       nodes[0]->GetQuorumSet());
 
   nodes[0]->SendMessage(samplePrepareMsg);
+  std::this_thread::yield();
+  std::this_thread::sleep_for(std::chrono::seconds(1));
+  printf("sending duplicate message\n");
   nodes[0]->SendMessage(samplePrepareMsg);
 
   // nodes[1]->ReceiveMessage();
