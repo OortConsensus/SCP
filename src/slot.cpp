@@ -89,7 +89,8 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
     // First case: We've never voted for anything. I.E. b = 0;
     // Vote for b but don't accept yet.
     if (state.b == Ballot {}) {
-      state.b = msg->b;
+      state.b.value = msg->b.value;
+      state.b.num = 1;
       // Send out vote for b.
       node->SendMessage(Prepare());
       return;
@@ -108,7 +109,7 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
     // Check that we haven't accepted a contradicting statement.
     
     // NOTE : the > operator does not accomplish the logic below.
-    if (msg->b.num >= state.p.num && compatible(msg->b, state.p)){
+    if (compatible(msg->b, state.p)){
       // Now check that one of our quorum slices has all voted for or 
       // accepted b.
       auto b_voted_or_accepted = 0;
@@ -153,10 +154,11 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
       }
 
       if (b_vblock_vote > node->quorumSet.threshold) {
-        // v-blocking set found so accept the contradicting ballot.
+        // v-blocking set found so vote the contradicting ballot.
         state.p_ = state.p;
         state.p = Ballot{};
-        state.b = msg->b;
+        state.b.value = msg->b.value;
+        state.b.num += 1;
         returnNow = true;
       }
     }
