@@ -168,27 +168,29 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
   }
 
   if ( state.b != state.c && state.b == state.p /* V confirms b is prepared */ ) {
-    auto b_prepared = 0;
+    auto b_prepared = node->quorumSet.threshold;
     for(auto kp : M) {
       auto m = kp.second;
       switch (m->type()){
       case FinishMessage_t:
         if ((std::static_pointer_cast<FinishMessage>(m))->b == state.p){
-          b_prepared +=1;
+          b_prepared--;
         }
         break;
       case PrepareMessage_t:
         if ( (std::static_pointer_cast<PrepareMessage>(m))->b == state.p){
-          b_prepared +=1;
+          b_prepared--;
         }
+        break;
+      }
+
+      if (b_prepared  == -1 ){
+        state.c = state.b;
+        node->SendMessage(Finish());
         break;
       }
     }
 
-    if (b_prepared > node->quorumSet.threshold){
-      state.c = state.b;
-      node->SendMessage(Finish());
-    }
   }
 
   
