@@ -32,21 +32,28 @@ void StellarKV::Tick() {
     
   }
 }
-pair<string, bool> StellarKV::Get(string k){
+pair<pair<Version,string>, bool> StellarKV::Get(string k){
   lock_guard<mutex> lock(mtx);
   try {
-    return pair<string, bool>(log.at(k), true);
+    return pair<pair<Version,string>, bool>(log.at(k), true);
   } catch (out_of_range){
+    auto s =pair<Version, string>(0,"");
+    return pair<pair<Version,string>, bool>(s, false);
 
-    return pair<string, bool>("", false);
   }
 }
-void StellarKV::Put(string k, string v){
+void StellarKV::Put(string k, string val){
   lock_guard<mutex> lock(mtx);
   std::ostringstream ss;
+  Version v;
+  try {
+    v = log.at(k).first;
+  } catch (out_of_range){
+    v = 0;
+  }
   {
     cereal::JSONOutputArchive archive(ss);
-    archive(CEREAL_NVP(PutMessage(k,v)));
+    archive(CEREAL_NVP(PutMessage(k,val,v+1)));
   }
   node->Propose(ss.str());
 }

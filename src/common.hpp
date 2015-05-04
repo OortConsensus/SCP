@@ -9,5 +9,6 @@
 typedef uint64_t NodeID;
 typedef uint64_t SlotNum;
 typedef uint64_t Nonce;
+typedef uint64_t Version;
 
 #endif

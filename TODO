@@ -5,15 +5,11 @@ TODO:
 		   - incrementing ballots?
 	Proposer Function to make new ballots
              - Verify nonces on receipt of new ballot for first time
+               * What are the places to verify>
+               * Dynamic difficulty?
 	Writeup Paper:
-			- Journey into Stellar/Our summary of how the protocol works
-			- Design overview
-                + Why we chose C++
-				+ What we got done/what is left
-				+ paste in consensus critical code
+            - Polishing
 	State Machine
-		  - Key Value store
-			* Append
 	Node/Network:
 		Being able to join at any time/bootstrap
 	Message
@@ -35,7 +31,14 @@ DONE:
 			 - Picking a slot
 			 - Use light HashCash for random timeouts?
 	Writeup Paper:
+			- Journey into Stellar/Our summary of how the protocol works
+			- Design overview
+                + Why we chose C++
+				+ What we got done/what is left
+				+ paste in consensus critical code
 	State Machine
+		  - Key Value store
+			* Append
 	Node/Network:
 	Message
 		toJSON

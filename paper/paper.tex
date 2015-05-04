@@ -108,5 +108,28 @@ therefore hopefull less prone to the development of ASIC hardware to
 compute them. The only incentive is to spend funds more quickly.
 
 \subsection{StellarKV}
+We implemented a simple key value store on top of the Stellar
+Consensus Protocol. The KV store has the following semantics:
+
+\paragraph{Get(Key)} returns a pair of Version and Value. Gets are not put in the log, they are served
+at whatevr slot the server has read up to. Entries are individually
+versioned in any case.
+\paragraph{Put(Key, Value)}  reads the log like Get, and puts in an entry of Value under Key with Version + 1. Versions less than what is stored in the log will be ignored.
+
+
+In a more full implementation, Key can be a public key, and value can
+be a signed message by the key. This allows for the StellarKV to be
+used a configuration updating consensus protocol. Other invariants
+could be added per key perhaps as well. This could also serve as the
+start of storing a balance as well for a transaction system. Keys
+could also be modified to be hierarchal for better namespacing, eg
+$Public Key||Pictures||10$.
+
+Versioning allows for a performant way of deduplicating entries which
+get in the log at multiple slots. If a Version is younger than what is
+in the log, the updates are not applied. Of course, a user should keep
+track of the highest version they have sent and be sure that a server
+reflects that change eventually.
+
 \subsection{Consensus Overview}
 \end{document}

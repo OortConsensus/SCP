@@ -17,15 +17,25 @@ namespace DISTPROJ{
       class ActionMessage {
       public:
         ActionMessage(){};
-        virtual void apply(std::map<std::string, std::string>* log) {};
+        virtual void apply(std::map<std::string, std::pair<Version,std::string>>* log) {};
       };
       class PutMessage : public ActionMessage{
         std::string Key;
         std::string Value;
+        Version v;
       public:
-        PutMessage() : PutMessage("",""){};
-        PutMessage(std::string k, std::string v) : Key(k), Value(v){};
-        void apply(std::map<std::string, std::string>* log) {(*log)[Key] = Value;};
+        PutMessage() : PutMessage("","",0){};
+        PutMessage(std::string k, std::string v, Version ver) : Key(k), Value(v), v(ver){};
+        void apply(std::map<std::string, std::pair<Version,std::string>>* log) {
+          try {
+            Version v_ = (*log).at(Key).first;
+            if (v_ < v )  {
+              (*log)[Key] = std::pair<Version, std::string>(v,Value);
+            }
+          } catch (std::out_of_range){
+            (*log)[Key] = std::pair<Version, std::string>(v,Value);
+          }
+        };
         template<class Archive>
         void serialize(Archive & archive) {
           archive(CEREAL_NVP(Key), CEREAL_NVP(Value));
@@ -34,7 +44,7 @@ namespace DISTPROJ{
        
       class StellarKV {
         LocalNode * node;
-        std::map<std::string, std::string> log;
+        std::map<std::string, std::pair<Version, std::string>> log;
         std::thread * t;
         std::mutex mtx;
         unsigned int slot;
@@ -42,7 +52,7 @@ namespace DISTPROJ{
 
       public:
         StellarKV(RPCLayer * rpc);
-        std::pair<std::string,bool> Get(std::string k);
+        std::pair<std::pair<Version,std::string>,bool> Get(std::string k);
         void Put(std::string k, std::string v);
 
       };
