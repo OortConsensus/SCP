@@ -38,6 +38,7 @@ namespace DISTPROJ {
   private:
     void handle(std::shared_ptr<PrepareMessage> msg);
     void handle(std::shared_ptr<FinishMessage> msg);
+    void lastDefined(NodeID n, std::shared_ptr<Message>* m);
     // void handlePrepare(NodeID v, Quorum& d, SlotState vState);
     // void handleFinish(NodeID v, Quorum& d, SlotState vState);
 

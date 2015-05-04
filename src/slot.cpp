@@ -1,21 +1,3 @@
-// switch (_msg.type()) {
-//   case PrepareMessage_t:
-//     auto msg = (PrepareMessage) _msg;
-
-//     if (log.find(msg.getSlot()) == log.end()) {
-//       log[msg.getSlot()] = Slot(msg.getSlot());
-//     }
-
-//     log[msg.getSlot()].handle(msg)
-
-//     break;
-//   case FinishMessage_t:
-//     auto msg = (FinishMessage) _msg;
-//     break;
-//   default:
-//     std::cout << "Panic : unknown message type.\n";
-// }
-
 #include "node.hpp"
 #include "quorum.hpp"
 #include "message.hpp"
@@ -37,41 +19,45 @@ std::shared_ptr<FinishMessage> Slot::Finish() {
   return p;
 }
 
+
+void Slot::lastDefined(NodeID from, std::shared_ptr<Message>* last) {
+      try {
+        *last = M.at(from);
+      }catch(std::out_of_range){
+        *last = std::make_shared<PrepareMessage>(from, 0, Ballot{}, Ballot{}, Ballot{}, Ballot{}, Quorum{});
+        M[from] = *last;
+      }
+  
+}
 void Slot::handle(std::shared_ptr<Message> _msg){
   // Add the message to be the last message seen
   // Handle the response
   std::shared_ptr<Message> last;
-  auto fmsg =std::static_pointer_cast<FinishMessage>( _msg);
-  auto pmsg = std::static_pointer_cast<PrepareMessage>( _msg);
   switch (_msg->type()) {
   case PrepareMessage_t:
-    try {
-      last = M.at(pmsg->from());
-    }catch(std::out_of_range){
-      last = std::make_shared<PrepareMessage>(pmsg->from(), 0, Ballot{}, Ballot{}, Ballot{}, Ballot{}, Quorum{});
-      M[pmsg->from()] = last;
-    }
-      
-    if (pmsg->follows(last)) {
-      handle(pmsg);
-      M[pmsg->from()] = pmsg;
+    {
+      auto pmsg = std::static_pointer_cast<PrepareMessage>( _msg);
+      auto from = pmsg->from();
+      lastDefined(from, &last);
+      if (pmsg->follows(last)) {
+        handle(pmsg);
+        M[from] = pmsg;
+      }
     }
     break;
   case FinishMessage_t:
-    try {
-      last = M.at(fmsg->from());
-    }catch(std::out_of_range){
-      last = std::make_shared<PrepareMessage>(fmsg->from(), 0, Ballot{}, Ballot{}, Ballot{}, Ballot{}, Quorum{});
-      M[fmsg->from()] = last;
-    }
-
-    if (fmsg->follows(last)) {
-      handle(fmsg);
-      M[fmsg->from()] = fmsg;
+    {
+      auto fmsg = std::static_pointer_cast<FinishMessage>( _msg);
+      auto from = fmsg->from();
+      lastDefined(from, &last);
+      if (fmsg->follows(last)) {
+        handle(fmsg);
+        M[from] = fmsg;
+      }
     }
     break;
   default:
-    printf("GARBAGE");
+    exit(EXIT_FAILURE);
     break;
   }
 

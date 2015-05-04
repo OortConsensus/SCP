@@ -5,6 +5,8 @@
 #include <iostream>
 #include <iomanip>
 
+// Deprecated on OSX... figure out the proper thing with their internal lib later...
+// Using technique from http://stackoverflow.com/questions/13784434/gcc-use-openssls-sha256-functions
 inline std::string sha256(std::string str)
 {
   unsigned char hbuf[SHA256_DIGEST_LENGTH];

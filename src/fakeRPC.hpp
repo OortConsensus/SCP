@@ -1,6 +1,6 @@
 
-#ifndef TRANSPORTDUMMY_H
-#define TRANSPORTDUMMY_H
+#ifndef FAKE_RPC_H
+#define FAKE_RPC_H
 
 #include <cstdlib>
 #include <vector>

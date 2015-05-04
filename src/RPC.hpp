@@ -1,6 +1,6 @@
 
-#ifndef TRANSPORT_H
-#define TRANSPORT_H
+#ifndef RPC_H
+#define RPC_H
 
 #include "common.hpp"
 
