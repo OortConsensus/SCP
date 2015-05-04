@@ -34,6 +34,8 @@ namespace DISTPROJ {
 
     // Dump state / received message inforamtion.
     void Dump();
+    Phase GetPhase() { return phi;};
+    std::string GetValue() { return state.c.value;};
 
   private:
     void handle(std::shared_ptr<PrepareMessage> msg);

@@ -29,8 +29,6 @@ namespace DISTPROJ {
 
     virtual bool follows(std::shared_ptr<Message> x) = 0;
 	
-	// template<class Archive>
-	// void serialize(Archive & archive);
   };
   
   class PrepareMessage : public Message {

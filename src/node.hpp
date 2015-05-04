@@ -52,15 +52,15 @@ namespace DISTPROJ {
     void SendMessage(std::shared_ptr<Message> msg);
     bool ReceiveMessage(std::shared_ptr<Message>* msg);
     void ProcessMessage(std::shared_ptr<Message> msg);
-
     void DumpLog();
+    std::pair<std::string, bool> View(SlotNum s);;
 
   private:
 	SlotNum maxSlot;
 	std::mutex mtx;
 	SlotNum NewSlot(); // only one of these can run at a time
     void Tick();
-    std::map<unsigned int, Slot*> log;
+    std::map<SlotNum, Slot*> log;
     std::set<NodeID> knownNodes;
     MessageClient * mc;
 

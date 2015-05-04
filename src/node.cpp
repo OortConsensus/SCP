@@ -41,12 +41,12 @@ void Node::PrintQuorumSet() {
 
 LocalNode::LocalNode(NodeID _id, RPCLayer& _rpc)
   : Node(_id, _rpc) {
-    mc = _rpc.GetClient(_id);
-  };
+  mc = _rpc.GetClient(_id);
+};
 LocalNode::LocalNode(NodeID _id, RPCLayer& _rpc, Quorum _quorumSet) 
   : Node(_id, _rpc, _quorumSet) {
-    mc = _rpc.GetClient(_id);
-  }; 
+  mc = _rpc.GetClient(_id);
+}; 
 
 void LocalNode::Tick() {
   std::shared_ptr<Message> m;
@@ -99,7 +99,7 @@ SlotNum LocalNode::NewSlot(){
 }
 
 void LocalNode::SendMessage(std::shared_ptr<Message> msg) {
-// TODO : interface with FakeRPC.
+  // TODO : interface with FakeRPC.
   mc->Broadcast(msg);
 }
 
@@ -132,3 +132,14 @@ void LocalNode::DumpLog() {
 }
 
 
+
+std::pair<std::string, bool> LocalNode::View(SlotNum s){
+  std::lock_guard<std::mutex> lock(mtx);
+  try{
+    if (log.at(s)->GetPhase() == EXTERNALIZE){
+      return std::pair<std::string, bool>(log.at(s)->GetValue(), true);
+    }
+  } catch (std::out_of_range){
+  }
+  return std::pair<std::string, bool>("", false);
+}
