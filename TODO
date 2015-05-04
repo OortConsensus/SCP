@@ -6,9 +6,9 @@ TODO:
 	Proposer Function to make new ballots
              - Verify nonces on receipt of new ballot for first time
 	Writeup Paper:
-			- Why we chose C++
 			- Journey into Stellar/Our summary of how the protocol works
 			- Design overview
+                + Why we chose C++
 				+ What we got done/what is left
 				+ paste in consensus critical code
 	State Machine

@@ -1,0 +1,112 @@
+\documentclass[preprint,11pt]{article}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{microtype}
+\usepackage[T1]{fontenc}
+
+\title{Stellar Consensus Protocol Implementation}
+\author{Jeremy Rubin\\
+  \texttt{jr@mit.edu}
+  \and
+  John Holliman\\
+  \texttt{holliman@mit.edu}
+}
+\begin{document}
+\maketitle
+\special{papersize=8.5in,11in}
+\setlength{\pdfpageheight}{\paperheight}
+\setlength{\pdfpagewidth}{\paperwidth}
+
+\section{Introduction}
+Cryptocurrencies are systems which facilitate the execution of
+payments, contracts, and other types of transactions over the internet
+in secure and robust ways. There is a rich history of
+cryptocurrencies, which range from David Chaum's Digi-Cash to Ron
+Rivest's Peppercoin. These systems require trusted third parties,
+however, and ultimately were not successful. Bitcoin solved the
+problem of reliance on trusted third parties through its Byzantine
+Fault Tolerant consensus mechanism -- a proof of work based
+blockchain.
+
+Proof of work is a very costly and energy inecient means to reaching
+consensus as it requires solving dicult problems which wastes
+computational resources.  Furthermore, transactions take a long time
+to conrm and security is in question if a single group at any point
+accounts for more than 50\% of the computing power.
+
+The Stellar Consensus Protocol is a design of a Federated Byzantine
+Agreement System, or a consensus protocol which relies on Federated
+Voting for security rather than proof-of-work. This is a much more
+efficient means of reaching consensus compared to proof-of-work, although
+the lower expense might mean that the incentives to keep it are lower.
+
+
+
+\section{Stellar Consensus Protocol}
+The Stellar Consensus Protocol is a four-phase paxos-like consensus
+protocol. Nodes exchange a series of ballots to vote to confirm, then
+accept values. The protocol can be considered in a single instance
+(ie, determines one value) context, but it can also be easily extended
+to multiple instance log replication.
+
+
+
+
+\section{Design Overview}
+We implemented the Stellar Consensus Protocol from a clean slate, not
+referencing the existing implementation.
+\subsection{C++}
+We decided to implement our project in C++. Although neither of us
+knew C++ well a priori, we considered it an important goal for out
+project given that almost all cryptocurrency/consensus systems code is
+written in C++. There were several stumbling blocks to get over, but
+we are both know proficient in C++, which we consider to be a very large
+reward of this project as we are now more comfortable contributing code
+to existing implementations.
+\subsection{Implementation Details}
+\paragraph{Network}
+We implemented a mock RPC interface. The reason we did this was so
+that we could extend it to easily show certain byzantine conditions,
+such as packet loss and reordering. We didn't implement a networked
+RPC interface although our RPC abstract base class could be subclassed
+to communicate over network.
+
+Even though our network was not real, key functionality was not mocked out.
+For instance, we serialize and deserialize all messages to and from JSON using the
+Cereal library. Node threads only communicate with these mock network queues, there
+is no direct memory sharing.
+
+\paragraph{Node}
+Each node maintains a set of slots. Upon receipt of a message, the
+node looks up the slot, creating it if it doesn't exist.  The node
+then processes the message in the context of the slot. Slots do not have an effect on
+one another.
+
+\paragraph{Quorum}
+The node maintains a quorum set of size $n$. It also chooses a
+parameter $m < n$ of which any set of $m+1$ nodes constitutes a quorum
+slice. Quorum selection is an open problem in Stellar Consensus
+Protocol, it is unclear how to get nodes to select quora such that
+quorum intersection holds.
+
+\subsection{Proof Of Timeout}
+One open problem in Stellar Consensus is detemining the mechanism by
+which Nodes are allowed to propose arguments for the log. Stellar
+consensus can be extremely inefficient in terms of number of messages
+sent, especially with multiple proposers.
+
+One solution which we added was adding a proof-of-work packet filter for
+ballots. By requesting a solution to: $hash(value || slot || nonce) < bound$
+with every ballot, two different values will take different amounts of
+time to find solutions to which serves as a randomized timeout which
+is valid in a byzantine context. This can help the network make
+progress. The bound can be tuned based on network activity. This also helps
+achieve anti-spam properties as well.
+
+Unlike in bitcoin, this proof-of-work is not directly incentivized,
+therefore hopefull less prone to the development of ASIC hardware to
+compute them. The only incentive is to spend funds more quickly.
+
+\subsection{StellarKV}
+\subsection{Consensus Overview}
+\end{document}
