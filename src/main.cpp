@@ -49,20 +49,21 @@ int main(int argc, char **argv) {
   dummyBallot.num = 1;
   dummyBallot.value = "";
 
-  auto samplePrepareMsg = std::make_shared<PrepareMessage>(
-      nodes[0]->GetNodeID(),
-      0,
-      dummyBallot,
-      dummyBallot,
-      dummyBallot,
-      dummyBallot,
-      nodes[0]->GetQuorumSet());
+  // auto samplePrepareMsg = std::make_shared<PrepareMessage>(
+  //     nodes[0]->GetNodeID(),
+  //     0,
+  //     dummyBallot,
+  //     dummyBallot,
+  //     dummyBallot,
+  //     dummyBallot,
+  //     nodes[0]->GetQuorumSet());
 
-  nodes[0]->SendMessage(samplePrepareMsg);
+  // nodes[0]->SendMessage(samplePrepareMsg);
+  nodes[0]->Propose("hello");
   std::this_thread::yield();
   std::this_thread::sleep_for(std::chrono::seconds(1));
-  printf("sending duplicate message\n");
-  nodes[0]->SendMessage(samplePrepareMsg);
+  // printf("sending duplicate message\n");
+  // nodes[0]->SendMessage(samplePrepareMsg);
 
   // nodes[1]->ReceiveMessage();
   

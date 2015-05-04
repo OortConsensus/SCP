@@ -1,13 +1,13 @@
 # define the C compiler to use
 CC = gcc
 CXX = g++
-CFLAGS = -Wall -g -std=c++11 -I .
+CFLAGS = -Wall -g -std=c++11  -Wno-deprecated-declarations
 # define any directories containing header files other than /usr/include, e.g. -I
-INCLUDES =
+INCLUDES = -I .
 # define library paths in addition to /usr/lib, e.g. -L
-LFLAGS =
+LFLAGS = 
 # define any libraries to link into executable:, e.g. -l
-LIBS =
+LIBS = -lssl -lcrypto
 # define the C source files
 SRCS = message.cpp RPC.cpp fakeRPC.cpp slot.cpp node.cpp main.cpp
 OBJS = $(SRCS:.cpp=.o)

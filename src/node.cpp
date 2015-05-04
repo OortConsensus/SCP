@@ -84,9 +84,13 @@ void LocalNode::AddNodeToQuorum(NodeID v) {
 SlotNum LocalNode::Propose(std::string value){
   mtx.lock();
   auto i = NewSlot();
-  auto m = std::make_shared<PrepareMessage>(id, i, Ballot{1, value}, Ballot{}, Ballot{}, Ballot{}, quorumSet); /* TODO; resending etc */
-  SendMessage(m);
   maxSlot++;
+  auto b = Ballot{1, value, 0};
+  printf("Finding Nonce\n");
+  generateNonce(&b, i);
+  printf("Nonce Found %i\n", b.nonce);
+  auto m = std::make_shared<PrepareMessage>(id, i, b, Ballot{}, Ballot{}, Ballot{}, quorumSet); /* TODO; resending etc */
+  SendMessage(m);
   mtx.unlock();
   return i;
 }

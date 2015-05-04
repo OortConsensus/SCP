@@ -4,19 +4,34 @@
 #include <cstdio>
 #include <iostream>
 #include <sstream>  
+#include "hash.hpp"
+#include "common.hpp"
 
 
+#define DIFFICULTY 3
  
 namespace DISTPROJ {
 
   struct Ballot {
     uint32_t num;
     std::string value;
+    uint64_t nonce;
 	template<class Archive>
 	void serialize(Archive & archive) {
-	  archive(num, value ); // serialize things by passing them to the archive
+    archive(num, value, nonce ); // serialize things by passing them to the archive
 	};
   };
+
+  inline bool checkNonce(Ballot * b, SlotNum s ){
+    return sha256(b->value + std::to_string(s)+std::to_string(b->nonce)).substr(0, DIFFICULTY).find_first_not_of('0') == std::string::npos;
+  }
+  inline void generateNonce(Ballot * b, SlotNum s){
+    while(!checkNonce(b, s)){
+        b->nonce++;
+    }
+
+    
+  }
 
   inline bool operator==(const Ballot& lhs, const Ballot& rhs) {
     return lhs.num == rhs.num && lhs.value == rhs.value;
