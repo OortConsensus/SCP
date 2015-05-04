@@ -81,6 +81,11 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
   bool returnNow = false;
   if (phi == PREPARE ) {
 
+    // Definition -- vote:
+    //  node v votes for a iff
+    //  1) v asserts a is valid/consistent
+    //  2) v promises not to vote against a.
+
     // First case: We've never voted for anything. I.E. b = 0;
     // Vote for b but don't accept yet.
     if (state.b == Ballot {}) {
