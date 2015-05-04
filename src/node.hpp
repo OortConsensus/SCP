@@ -50,7 +50,7 @@ namespace DISTPROJ {
     void Start();
     SlotNum Propose(std::string value);
     void SendMessage(std::shared_ptr<Message> msg);
-    bool ReceiveMessage(std::shared_ptr<Message> msg);
+    bool ReceiveMessage(std::shared_ptr<Message>* msg);
     void ProcessMessage(std::shared_ptr<Message> msg);
 
     void DumpLog();

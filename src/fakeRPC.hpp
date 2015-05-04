@@ -29,7 +29,7 @@ namespace DISTPROJ {
     void AddNode(NodeID node);
 
     void Send(std::shared_ptr<Message> msg, NodeID id, NodeID peerID);
-    bool Receive(std::shared_ptr<Message> msg, NodeID id);    
+    bool Receive(std::shared_ptr<Message>* msg, NodeID id);    
     void Broadcast(std::shared_ptr<Message> msg, NodeID id);
   };
 
@@ -39,7 +39,7 @@ namespace DISTPROJ {
   public:
     MessageClient(NodeID id, RPCLayer* r);
     void Send(std::shared_ptr<Message> msg, NodeID peerID);
-    bool Receive(std::shared_ptr<Message> msg);    
+    bool Receive(std::shared_ptr<Message>* msg);    
     void Broadcast(std::shared_ptr<Message> msg);
     NodeID GetNodeID(){return id;};
   };
