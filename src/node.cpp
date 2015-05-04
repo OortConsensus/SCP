@@ -52,8 +52,7 @@ void LocalNode::Tick() {
   std::shared_ptr<Message> m;
   while (true){
 	mtx.lock();
-    if (ReceiveMessage(m)) {
-
+    if (ReceiveMessage(&m)) {
       ProcessMessage(m);
 
 
@@ -100,7 +99,7 @@ void LocalNode::SendMessage(std::shared_ptr<Message> msg) {
   mc->Broadcast(msg);
 }
 
-bool LocalNode::ReceiveMessage(std::shared_ptr<Message> msg) {
+bool LocalNode::ReceiveMessage(std::shared_ptr<Message>* msg) {
   bool received = mc->Receive(msg);
   if (received && msg) {
 

@@ -36,7 +36,7 @@ void FakeRPCLayer::Send(std::shared_ptr<Message> msg, NodeID id, NodeID peerID) 
 }
 
 
-bool FakeRPCLayer::Receive(std::shared_ptr<Message> msg, NodeID id) {
+bool FakeRPCLayer::Receive(std::shared_ptr<Message>* msg, NodeID id) {
   // We only have 1 thread dequeing so this is chill.
   if (messageQueues[id]->Empty()) {
     return false;
@@ -45,9 +45,9 @@ bool FakeRPCLayer::Receive(std::shared_ptr<Message> msg, NodeID id) {
     ss.str(messageQueues[id]->Get());
     {
       cereal::JSONInputArchive archive(ss);
-      archive(msg);
+      archive(*msg);
     }
-    return true && msg; // implicitly checks for validity
+    return true && *msg; // implicitly checks for validity
   }
 }
 
@@ -71,7 +71,7 @@ void MessageClient::Send(std::shared_ptr<Message> msg, NodeID peerID) {
 }
 
 
-bool MessageClient::Receive(std::shared_ptr<Message> msg) {
+bool MessageClient::Receive(std::shared_ptr<Message>* msg) {
   return rpc->Receive(msg, id);
 }
 
