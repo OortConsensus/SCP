@@ -32,6 +32,9 @@ main
 # Library
 src/cereal
 
+# Python
+*.pyc
+
 
 # Latex
 *.aux

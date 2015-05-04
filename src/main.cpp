@@ -9,13 +9,23 @@
 #include "ballot.hpp"
 #include <chrono>
 #include <thread>
+#include <fstream>
 
 using namespace DISTPROJ;
 const int N = 6;
 std::array<LocalNode*, N> nodes;
 
-int main(int argc, char **argv) {
-
+int main(int argc, char *argv[]) {
+  printf("%s %s \n", argv[1], argv[0]);
+  if (!argv[1] || !argv[2]) // Must provide a read/write fifo
+        exit(-1);
+  std::ofstream ofs (argv[2], std::ofstream::out);
+  ofs << "lorem ipsum\n";
+  ofs.close();
+  std::ifstream ifs (argv[1], std::ifstream::in);
+  std::cout << "GOT:"<<ifs.get <<"\n";
+  ifs.close();
+  printf("passed fstreams\n");
   // Create transport layer.
   FakeRPCLayer rpc = FakeRPCLayer();
 
