@@ -228,6 +228,9 @@ void Slot::handle(std::shared_ptr<FinishMessage> msg) {
     if (b_commit > node->quorumSet.threshold) {
       phi = EXTERNALIZE;
     }
+  } else {
+    // TODO : Might need to check for a v-blocking set and go back into the 
+    // prepare state.
   }
 
 }
