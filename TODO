@@ -41,8 +41,7 @@ DONE:
 			* Append
 	Node/Network:
 	Message
-		toJSON
-		fromJSON
+        serialize
 		Change RPC Layer Queue to be using json strings
 	FakeRPCLayer -> TCPRPCLayer or UDPRPCLayer or Byzantine RPC Layer
 	Memory Management
