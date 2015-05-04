@@ -10,7 +10,7 @@ Slot::Slot(int id, LocalNode* m) : phi(PREPARE), node(m){
 }
 
 std::shared_ptr<PrepareMessage> Slot::Prepare() {
-  auto p = std::make_shared<PrepareMessage>(node->GetNodeID(), state.slotNum, state.b, state.p, state.p_, state.c, node->GetQuorumSet()); 
+  auto p = std::make_shared<PrepareMessage>(node->GetNodeID(), state.slotNum, state.b, state.p, state.p_, state.c, node->GetQuorumSet(),0); 
   return p;
 }
 
@@ -24,7 +24,7 @@ void Slot::lastDefined(NodeID from, std::shared_ptr<Message>* last) {
   try {
     *last = M.at(from);
   }catch(std::out_of_range){
-    *last = std::make_shared<PrepareMessage>(from, 0, Ballot{}, Ballot{}, Ballot{}, Ballot{}, Quorum{});
+    *last = std::make_shared<PrepareMessage>(from, 0, Ballot{}, Ballot{}, Ballot{}, Ballot{}, Quorum{},0);
     M[from] = *last;
   }
   
