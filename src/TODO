@@ -4,7 +4,7 @@ TODO:
 		   - creating/sending messages appropriately
 		   - incrementing ballots?
 	Proposer Function to make new ballots
-			 - Use light HashCash for random timeouts?
+             - Verify nonces on receipt of new ballot for first time
 	Writeup Paper:
 			- Why we chose C++
 			- Journey into Stellar/Our summary of how the protocol works
@@ -33,6 +33,7 @@ DONE:
 	Finish Consensus Stuff:
 	Proposer Function to make new ballots
 			 - Picking a slot
+			 - Use light HashCash for random timeouts?
 	Writeup Paper:
 	State Machine
 	Node/Network:
