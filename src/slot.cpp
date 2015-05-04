@@ -81,14 +81,14 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
   bool returnNow = false;
   if (phi == PREPARE ) {
 
-    // TODO :
     // First case: We've never voted for anything. I.E. b = 0;
     // Vote for b but don't accept yet.
-
-   // if (state.b == Ballot {}) {
-   //   state.b = msg->b;
-
-   // }
+    if (state.b == Ballot {}) {
+      state.b = msg->b;
+      // Send out vote for b.
+      node->SendMessage(Prepare());
+      return;
+    }
 
     // if( true /* && a message allows v to accept that new ballots are prepared by either of accepts 2 criteria */) {
     // if prepared ballot then set p
@@ -102,8 +102,8 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
     
     // Check that we haven't accepted a contradicting statement.
     
-    // TODO : fix this. this operator is not exactly what we want.
-    if (msg->b > state.p){
+    // NOTE : the > operator does not accomplish the logic below.
+    if (msg->b.num >= state.p.num && compatible(msg->b, state.p)){
       // Now check that one of our quorum slices has all voted for or 
       // accepted b.
       auto b_voted_or_accepted = 0;
@@ -125,7 +125,7 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
       }
 
       if (b_voted_or_accepted > node->quorumSet.threshold) {
-        state.p = msg->b;
+        state.p = state.b;
         returnNow = true;
       }
     } else {
@@ -150,23 +150,23 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
       if (b_vblock_vote > node->quorumSet.threshold) {
         // v-blocking set found so accept the contradicting ballot.
         state.p_ = state.p;
-        state.p = msg->b;
+        state.p = Ballot{};
+        state.b = msg->b;
         returnNow = true;
       }
     }
 
+    // If a c ballot exists but p >!~ c or p_ >!~ c, clear c.
     if (state.c.num != 0 && (state.p > state.c || state.p_ > state.c)) {
-      state.c.num = 0;
+      state.c = Ballot{};
       returnNow = true;
     }
+
     if (returnNow) {
       node->SendMessage(Prepare());
-      return;
     }
 
-    // }
     if ( state.b != state.c && state.b == state.p /* V confirms b is prepared */ ) {
-
       auto b_prepared = 0;
       for(auto kp : M) {
         auto m = kp.second;
@@ -175,7 +175,6 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
           if ((std::static_pointer_cast<FinishMessage>(m))->b == state.p){
             b_prepared +=1;
           }
-            
           break;
         case PrepareMessage_t:
           if ( (std::static_pointer_cast<PrepareMessage>(m))->b == state.p){
@@ -189,7 +188,6 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
         state.c = state.b;
         node->SendMessage(Finish());
       }
-
     }
 
   }
