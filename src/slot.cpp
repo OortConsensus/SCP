@@ -47,10 +47,10 @@ void Slot::handle(std::shared_ptr<Message> _msg){
       // Check if we are already done.
       lastDefined(from, &last);
       if (pmsg->follows(last)) {
-      if (phi == EXTERNALIZE) {
-        node->SendMessageTo(Finish(),from);
-        return;
-      }
+        if (phi == EXTERNALIZE && from != node->GetNodeID()) {
+          node->SendMessageTo(Finish(),from);
+          return;
+        }
         handle(pmsg);
         M[from] = pmsg;
       }
@@ -64,10 +64,10 @@ void Slot::handle(std::shared_ptr<Message> _msg){
       // Check if we are already done.
       lastDefined(from, &last);
       if (fmsg->follows(last)) {
-      if (phi == EXTERNALIZE) {
-        node->SendMessageTo(Finish(),from);
-        return;
-      }
+        if (phi == EXTERNALIZE && from != node->GetNodeID()) {
+          node->SendMessageTo(Finish(),from);
+          return;
+        }
         handle(fmsg);
         M[from] = fmsg;
       }
