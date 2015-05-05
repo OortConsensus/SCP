@@ -22,7 +22,7 @@ void StellarKV::Tick() {
   for (;;std::this_thread::sleep_for(std::chrono::milliseconds(10))){
     {
       lock_guard<mutex> lock(mtx);
-      auto p = node->View(slot);
+      auto p = node->View(node->GetMaxSlot());
       if (p.second) {
         shared_ptr<PutMessage> m;
         std::istringstream ss;
@@ -32,7 +32,7 @@ void StellarKV::Tick() {
           archive(m);
         }
         m->apply(&log);
-        slot++;
+        node->IncrementMaxSlot();
       }
     }
     
@@ -62,7 +62,8 @@ void StellarKV::Put(string k, string val){
     auto putmessage = make_shared<PutMessage>(k,val,v+1);
     archive(CEREAL_NVP(putmessage));
   }
-  node->Propose(ss.str());
+  SlotNum i = node->Propose(ss.str());
+  printf("Putting in slot %llu\n", i);
   return;
 }
 int StellarKV::GetThreshold(){

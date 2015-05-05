@@ -112,7 +112,7 @@ SlotNum LocalNode::Propose(std::string value){
 }
 SlotNum LocalNode::NewSlot(){
   auto a = maxSlot;
-  maxSlot++;
+  //maxSlot++;
   return a;
 }
 

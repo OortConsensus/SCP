@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  nodes[0]->Put("test2", "MESSAGE2");
+  //nodes[0]->Put("test2", "MESSAGE2");
   nodes[1]->Put("test2", "MESSAGE2");
   for (;;this_thread::sleep_for(chrono::seconds(1))){
     auto count = N;

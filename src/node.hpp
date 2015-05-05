@@ -60,6 +60,8 @@ namespace DISTPROJ {
     void ProcessMessage(std::shared_ptr<Message> msg);
     void DumpLog();
     std::pair<std::string, bool> View(SlotNum s);;
+    void IncrementMaxSlot() { maxSlot++; };
+    SlotNum GetMaxSlot() { return maxSlot; };
 
   private:
     SlotNum maxSlot;
