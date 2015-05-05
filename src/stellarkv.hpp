@@ -6,6 +6,7 @@
 #include <set>
 #include <mutex>
 #include "cereal/cereal.hpp"
+#include "cereal/types/string.hpp"
 #include "cereal/archives/json.hpp"
 #include "cereal/types/polymorphic.hpp"
 namespace DISTPROJ{
@@ -39,7 +40,7 @@ namespace DISTPROJ{
         };
         template<class Archive>
         void serialize(Archive & archive) {
-          archive(CEREAL_NVP(Key), CEREAL_NVP(Value));
+          archive(CEREAL_NVP(Key), CEREAL_NVP(Value), CEREAL_NVP(v));
         };
       };
        
@@ -68,7 +69,7 @@ namespace DISTPROJ{
 
   }
 }
-CEREAL_REGISTER_TYPE(DISTPROJ::Application::StellarKV::PutMessage);
+CEREAL_REGISTER_TYPE_WITH_NAME(DISTPROJ::Application::StellarKV::PutMessage, "PutMessage");
 #endif
 
 

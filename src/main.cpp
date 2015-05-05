@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     nodes[i]->AddPeers(s);
   }
   printf("Need to get %i nodes to agree out of %i nodes\n",nodes[0]->GetThreshold(), N);
-  nodes[0]->Put("test", "MESSAGE\n");
+  nodes[0]->Put("test", "MESSAGE");
   for (;;this_thread::sleep_for(chrono::seconds(1))){
     auto r = nodes[0]->Get("test");
     // if (r.second){

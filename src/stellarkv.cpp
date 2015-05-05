@@ -22,11 +22,10 @@ void StellarKV::Tick() {
   for (;;std::this_thread::sleep_for(std::chrono::milliseconds(10))){
     {
       lock_guard<mutex> lock(mtx);
-      std::istringstream ss;
       auto p = node->View(slot);
       if (p.second) {
-        printf("APPLY TO LOG\n");
         shared_ptr<PutMessage> m;
+        std::istringstream ss;
         ss.str(p.first);
         {
           cereal::JSONInputArchive archive(ss);
@@ -51,17 +50,17 @@ pair<pair<Version,string>, bool> StellarKV::Get(string k){
 }
 void StellarKV::Put(string k, string val){
   lock_guard<mutex> lock(mtx);
-  std::ostringstream ss;
   Version v;
   try {
     v = log.at(k).first;
   } catch (out_of_range){
     v = 0;
   }
+  ostringstream ss;
   {
     cereal::JSONOutputArchive archive(ss);
-    auto p =PutMessage(k,val,v+1);
-    archive(CEREAL_NVP(p));
+    auto putmessage = make_shared<PutMessage>(k,val,v+1);
+    archive(CEREAL_NVP(putmessage));
   }
   node->Propose(ss.str());
   return;
