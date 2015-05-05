@@ -119,7 +119,7 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
       }
       // This can be moved outside of the for loop -- this let's it
       // duck out as soon as threshold crossed
-      if ( b_voted_or_accepted == -1 ) {
+      if ( b_voted_or_accepted == 0 ) {
         state.p = state.b;
         returnNow = true;
         break;
@@ -144,7 +144,7 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
         break;
       }
 
-      if (b_vblock_vote  == -1) {
+      if (b_vblock_vote  == 0) {
         // v-blocking set found so vote the contradicting ballot.
         state.p_ = state.p;
         state.p = Ballot{};
@@ -184,7 +184,7 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
         break;
       }
 
-      if (b_prepared  == -1 ){
+      if (b_prepared  == 0 ){
         state.c = state.b;
         node->SendMessage(Finish());
         break;
