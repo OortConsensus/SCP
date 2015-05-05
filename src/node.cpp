@@ -104,7 +104,7 @@ SlotNum LocalNode::Propose(std::string value){
   auto b = Ballot{1, value};
   printf("Finding Nonce\n");
   auto nonce = generateNonce(&b, i);
-  printf("Nonce Found %i\n", nonce);
+  printf("Nonce Found %llu\n", nonce);
   auto m = std::make_shared<PrepareMessage>(id, i, b, Ballot{}, Ballot{}, Ballot{}, quorumSet, 0); /* TODO; resending etc */
   SendMessage(m);
   printf("messages sent\n");

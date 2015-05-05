@@ -68,7 +68,7 @@ namespace DISTPROJ{
 
   }
 }
-CEREAL_REGISTER_TYPE_WITH_NAME(DISTPROJ::Application::StellarKV::PutMessage, "PutMessage");
+CEREAL_REGISTER_TYPE(DISTPROJ::Application::StellarKV::PutMessage);
 #endif
 
 

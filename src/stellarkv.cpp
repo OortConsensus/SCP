@@ -25,7 +25,7 @@ void StellarKV::Tick() {
       std::istringstream ss;
       auto p = node->View(slot);
       if (p.second) {
-        printf("APPLY TO LOG");
+        printf("APPLY TO LOG\n");
         shared_ptr<PutMessage> m;
         ss.str(p.first);
         {
