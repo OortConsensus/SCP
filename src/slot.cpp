@@ -220,7 +220,7 @@ void Slot::handle(std::shared_ptr<FinishMessage> msg) {
   printf("Finish\n");
   // Finish message implies every statement implied by Prepare v i b b 0 b D.
   auto p = std::make_shared<PrepareMessage>(node->GetNodeID(), state.slotNum, state.b, state.b, Ballot{}, state.b, node->GetQuorumSet(),0); 
-  handle(p);
+  // handle(p);
   if (phi == PREPARE && state.b == state.p && state.b == state.c && msg->b == state.b) { // RULE 3
     phi = FINISH;
     // TODO (JHH) : Figure what if anything needs to happen here.
@@ -243,7 +243,7 @@ void Slot::handle(std::shared_ptr<FinishMessage> msg) {
         }
         break;
       }
-
+      printf("Externalizing need %d", b_commit);
       if (b_commit == 0) {
         phi = EXTERNALIZE;
         break;
