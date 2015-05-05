@@ -30,6 +30,11 @@ void Slot::lastDefined(NodeID from, std::shared_ptr<Message>* last) {
   
 }
 void Slot::handle(std::shared_ptr<Message> _msg){
+  // Check if we are already done.
+  if (phi == EXTERNALIZE) {
+    
+    return;
+  }
   // Add the message to be the last message seen
   // Handle the response
   std::shared_ptr<Message> last;
@@ -67,6 +72,7 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
   bool returnNow = false;
   // If phase is not prepare, return
   if (phi != PREPARE ) {
+    // Send 1-to-1 finish message to from node.
     return;
   }
 
@@ -197,6 +203,9 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
 }
 void Slot::handle(std::shared_ptr<FinishMessage> msg) {
   printf("Finish");
+  // Finish message implies every statement implied by Prepare v i b b 0 b D.
+  auto p = std::make_shared<PrepareMessage>(node->GetNodeID(), state.slotNum, state.b, state.b, Ballot{}, state.b, node->GetQuorumSet(),0); 
+  handle(p);
   if (phi == PREPARE && state.b == state.p && state.b == state.c && msg->b == state.b) { // RULE 3
     phi = FINISH;
     // TODO (JHH) : Figure what if anything needs to happen here.
