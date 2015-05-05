@@ -257,7 +257,7 @@ void Slot::handle(std::shared_ptr<FinishMessage> msg) {
 }
 // Dump state / received message inforamtion.
 void Slot::Dump(){
-  printf("id: %llu, slot: %llu, b: %d, p: %d, p_: %d, c:%d, Phase %s\n",node->GetNodeID(),state.slotNum, state.b.num,state.p.num,state.p_.num, state.c.num, Phase_s[phi].c_str());
+  printf("Dumping id: %llu\n    slot: %llu, b: %d, p: %d, p_: %d, c:%d \n%s\n, Phase %s\n",node->GetNodeID(),state.slotNum, state.b.num,state.p.num,state.p_.num, state.c.num,state.c.value.c_str(), Phase_s().c_str());
 }
 
 void handlePrepare(NodeID v, Quorum& d, SlotState vState){

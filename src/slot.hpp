@@ -15,7 +15,6 @@ namespace DISTPROJ {
   class FinishMessage;
   class LocalNode;
   enum Phase { PREPARE, FINISH, EXTERNALIZE };
-  std::map<Phase, std::string> Phase_s= {{PREPARE, "Prepare"}, {FINISH, "Finish"}, {EXTERNALIZE, "Externalize"}};
 
   struct SlotState {
     Ballot b;
@@ -38,6 +37,11 @@ namespace DISTPROJ {
     Phase GetPhase() { return phi;};
     std::string GetValue() { return state.c.value;};
 
+    std::string Phase_s() {
+
+    const static std::map<Phase, std::string> phase= {{PREPARE, "Prepare"}, {FINISH, "Finish"}, {EXTERNALIZE, "Externalize"}};
+    return phase.at(phi);
+    };
   private:
     void handle(std::shared_ptr<PrepareMessage> msg);
     void handle(std::shared_ptr<FinishMessage> msg);
@@ -52,7 +56,6 @@ namespace DISTPROJ {
 
     std::shared_ptr<PrepareMessage> Prepare();
     std::shared_ptr<FinishMessage> Finish();
-
 
   };
 }

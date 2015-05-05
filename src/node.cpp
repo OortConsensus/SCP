@@ -158,10 +158,9 @@ void LocalNode::DumpLog() {
 std::pair<std::string, bool> LocalNode::View(SlotNum s){
   std::lock_guard<std::mutex> lock(mtx);
   try{
-    if (log.at(s)->GetPhase() == EXTERNALIZE){
-      return std::pair<std::string, bool>(log.at(s)->GetValue(), true);
-    }
+    printf("VIEW: %s\n", log.at(s)->Phase_s().c_str());
+    return std::pair<std::string, bool>(log.at(s)->GetValue(), log.at(s)->GetPhase() == EXTERNALIZE);
   } catch (std::out_of_range){
+    return std::pair<std::string, bool>("", false);
   }
-  return std::pair<std::string, bool>("", false);
 }

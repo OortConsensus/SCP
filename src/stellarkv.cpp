@@ -20,12 +20,12 @@ NodeID StellarKV::GetNodeID(){
 void StellarKV::Tick() {
 
   for (;;std::this_thread::sleep_for(std::chrono::milliseconds(10))){
-    // printf("tick\n");
     {
       lock_guard<mutex> lock(mtx);
       std::istringstream ss;
       auto p = node->View(slot);
       if (p.second) {
+        printf("APPLY TO LOG");
         shared_ptr<PutMessage> m;
         ss.str(p.first);
         {

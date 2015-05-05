@@ -36,10 +36,10 @@ int main(int argc, char *argv[]) {
   nodes[0]->Put("test", "MESSAGE\n");
   for (;;this_thread::sleep_for(chrono::seconds(1))){
     auto r = nodes[0]->Get("test");
-    if (r.second){
+    // if (r.second){
       printf("Key was set to (%s)\n",r.first.second.c_str());
-      break;
-    }
+      // break;
+    // }
   }
   return 0;
 }
