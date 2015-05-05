@@ -4,9 +4,13 @@
 #include "slot.hpp"
 #include <memory>
 using namespace DISTPROJ;
-
+#define NILBALLOT Ballot{0, ""}
 Slot::Slot(int id, LocalNode* m) : phi(PREPARE), node(m){
   state.slotNum = id;
+  state.b = NILBALLOT;
+  state.p = NILBALLOT;
+  state.p_ = NILBALLOT;
+  state.c = NILBALLOT;
 }
 
 std::shared_ptr<PrepareMessage> Slot::Prepare() {
@@ -24,7 +28,7 @@ void Slot::lastDefined(NodeID from, std::shared_ptr<Message>* last) {
   try {
     *last = M.at(from);
   }catch(std::out_of_range){
-    *last = std::make_shared<PrepareMessage>(from, 0, Ballot{}, Ballot{}, Ballot{}, Ballot{}, Quorum{},0);
+    *last = std::make_shared<PrepareMessage>(from, 0, NILBALLOT,NILBALLOT,NILBALLOT,NILBALLOT, Quorum{},0);
     M[from] = *last;
   }
 
@@ -33,6 +37,7 @@ void Slot::handle(std::shared_ptr<Message> _msg){
   // Add the message to be the last message seen
   // Handle the response
   std::shared_ptr<Message> last;
+  Dump();
   switch (_msg->type()) {
   case PrepareMessage_t:
     {
@@ -73,6 +78,7 @@ void Slot::handle(std::shared_ptr<Message> _msg){
     break;
   }
 
+  Dump();
 }
 void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
   printf("PREPARE\n");
@@ -90,7 +96,7 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
 
   // First case: We've never voted for anything. I.E. b = 0;
   // Vote for b but don't accept yet.
-  if (state.b == Ballot {}) {
+  if (state.b == NILBALLOT) {
     state.b.value = msg->b.value;
     state.b.num = 1;
     // Send out vote for b.
@@ -111,7 +117,8 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
   // Check that we haven't accepted a contradicting statement.
 
   // NOTE : the > operator does not accomplish the logic below.
-  if (compatible(msg->b, state.p)){ 
+  if (compatible(msg->b, state.p) || state.p == NILBALLOT){ 
+    printf("compatible\n");
     // Now check that one of our quorum slices has all voted for or 
     // accepted b.
     auto b_voted_or_accepted = node->quorumSet.threshold;
@@ -138,6 +145,7 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
         break;
       }
     }
+    printf("need %d votes", b_voted_or_accepted);
 
   } else {
     // Statement contradicted. Check for v-blocking.
@@ -209,7 +217,7 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
 
 }
 void Slot::handle(std::shared_ptr<FinishMessage> msg) {
-  printf("Finish");
+  printf("Finish\n");
   // Finish message implies every statement implied by Prepare v i b b 0 b D.
   auto p = std::make_shared<PrepareMessage>(node->GetNodeID(), state.slotNum, state.b, state.b, Ballot{}, state.b, node->GetQuorumSet(),0); 
   handle(p);
@@ -249,7 +257,7 @@ void Slot::handle(std::shared_ptr<FinishMessage> msg) {
 }
 // Dump state / received message inforamtion.
 void Slot::Dump(){
-  // TODO
+  printf("id: %llu, slot: %llu, b: %d, p: %d, p_: %d, c:%d, Phase %s\n",node->GetNodeID(),state.slotNum, state.b.num,state.p.num,state.p_.num, state.c.num, phi == PREPARE ? "Prepare" : "After Prepare");
 }
 
 void handlePrepare(NodeID v, Quorum& d, SlotState vState){

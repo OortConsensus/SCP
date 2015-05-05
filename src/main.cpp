@@ -23,18 +23,19 @@ int main(int argc, char *argv[]) {
   shared_ptr<FakeRPCLayer> rpc = make_shared<FakeRPCLayer>();
 
   // Create nodes.
-  for (auto i =0; i < N-1; i++)
+  for (auto i =0; i < N; i++)
     nodes[i] = make_shared<StellarKV>(rpc, 0.8);
   set<NodeID> s;
-  for (auto i =0; i < N-1; i++)
+  for (auto i =0; i < N; i++)
     s.insert(nodes[i]->GetNodeID());
 
-  for (auto i =0; i < N-1; i++)
+  for (auto i =0; i < N; i++) {
     nodes[i]->AddPeers(s);
-  nodes[0]->Put("test", "1");
-  printf("hello");
+  }
+  printf("Need to get %i nodes to agree out of %i nodes\n",nodes[0]->GetThreshold(), N);
+  nodes[0]->Put("test", "MESSAGE\n");
   for (;;this_thread::sleep_for(chrono::seconds(1))){
-    printf("%s",nodes[0]->Get("test").first.second.c_str());
+    printf("Key was set to (%s)\n",nodes[0]->Get("test").first.second.c_str());
   }
   return 0;
 }

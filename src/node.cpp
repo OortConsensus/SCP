@@ -51,14 +51,13 @@ LocalNode::LocalNode(NodeID _id, RPCLayer& _rpc, Quorum _quorumSet)
 void LocalNode::Tick() {
   std::shared_ptr<Message> m;
   while (true){
-    mtx.lock();
+    std::lock_guard<std::mutex> lock(mtx);
     if (ReceiveMessage(&m)) {
       ProcessMessage(m);
 
 
     }
-    mtx.unlock();
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
 }
 

@@ -20,7 +20,6 @@ namespace DISTPROJ {
       archive(num, value); // serialize things by passing them to the archive
 	};
   };
-
   inline bool checkNonce(Ballot * b, SlotNum s , Nonce nonce){
     return sha256(b->value + std::to_string(s)+std::to_string(nonce)).substr(0, DIFFICULTY).find_first_not_of('0') == std::string::npos;
   }
@@ -33,6 +32,7 @@ namespace DISTPROJ {
   }
 
   inline bool operator==(const Ballot& lhs, const Ballot& rhs) {
+    printf("comparing %s %s \n", lhs.value.c_str(), rhs.value.c_str());
     return lhs.num == rhs.num && lhs.value == rhs.value;
   }
   inline bool operator!=(const Ballot& lhs, const Ballot& rhs) {

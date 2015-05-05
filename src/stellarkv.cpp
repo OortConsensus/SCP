@@ -11,6 +11,7 @@ StellarKV::StellarKV(shared_ptr<RPCLayer> rpc, float tr)  : threshold_ratio(tr){
   uniform_int_distribution<NodeID> dist(0, ~0);
   node = new LocalNode(dist(gen), *rpc, Quorum{});
   slot = 0;
+  node->Start();
   t = new thread(&StellarKV::Tick, this);
 }
 NodeID StellarKV::GetNodeID(){
@@ -18,19 +19,22 @@ NodeID StellarKV::GetNodeID(){
 }
 void StellarKV::Tick() {
 
-  std::istringstream ss;
-  for (;;std::this_thread::sleep_for(std::chrono::seconds(1))){
-    lock_guard<mutex> lock(mtx);
-    auto p = node->View(slot);
-    if (p.second) {
-      shared_ptr<PutMessage> m;
-      ss.str(p.first);
-      {
-        cereal::JSONInputArchive archive(ss);
-        archive(m);
+  for (;;std::this_thread::sleep_for(std::chrono::milliseconds(10))){
+    // printf("tick\n");
+    {
+      lock_guard<mutex> lock(mtx);
+      std::istringstream ss;
+      auto p = node->View(slot);
+      if (p.second) {
+        shared_ptr<PutMessage> m;
+        ss.str(p.first);
+        {
+          cereal::JSONInputArchive archive(ss);
+          archive(m);
+        }
+        m->apply(&log);
+        slot++;
       }
-      m->apply(&log);
-      slot++;
     }
     
   }
@@ -56,11 +60,15 @@ void StellarKV::Put(string k, string val){
   }
   {
     cereal::JSONOutputArchive archive(ss);
-    archive(CEREAL_NVP(PutMessage(k,val,v+1)));
+    auto p =PutMessage(k,val,v+1);
+    archive(CEREAL_NVP(p));
   }
   node->Propose(ss.str());
+  return;
 }
-
+int StellarKV::GetThreshold(){
+  return node->GetThreshold();
+}
 void StellarKV::AddPeer(NodeID n) {
   node->AddNodeToQuorum(n);
   node->SetThreshold(node->QuorumSize() * threshold_ratio);

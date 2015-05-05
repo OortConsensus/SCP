@@ -57,6 +57,7 @@ namespace DISTPROJ{
         std::pair<std::pair<Version,std::string>,bool> Get(std::string k);
         void Put(std::string k, std::string v);
         NodeID GetNodeID();
+        int GetThreshold();
         void AddPeer(NodeID node);
         void RemovePeer(NodeID node);
         void AddPeers(std::set<NodeID> node);
