@@ -3,6 +3,7 @@
 #include "node.hpp"
 #include <string>
 #include <thread>
+#include <set>
 #include <mutex>
 #include "cereal/cereal.hpp"
 #include "cereal/archives/json.hpp"
@@ -49,11 +50,17 @@ namespace DISTPROJ{
         std::mutex mtx;
         unsigned int slot;
         void Tick();
+        float threshold_ratio;
 
       public:
-        StellarKV(RPCLayer * rpc);
+        StellarKV(std::shared_ptr<RPCLayer> rpc, float tr);
         std::pair<std::pair<Version,std::string>,bool> Get(std::string k);
         void Put(std::string k, std::string v);
+        NodeID GetNodeID();
+        void AddPeer(NodeID node);
+        void RemovePeer(NodeID node);
+        void AddPeers(std::set<NodeID> node);
+        void RemovePeers(std::set<NodeID> node);
 
       };
     }

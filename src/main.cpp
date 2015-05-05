@@ -10,72 +10,101 @@
 #include <chrono>
 #include <thread>
 #include <fstream>
+#include "stellarkv.hpp"
 
 using namespace DISTPROJ;
+using namespace DISTPROJ::Application::StellarKV;
+using namespace std;
 const int N = 6;
-std::array<LocalNode*, N> nodes;
 
 int main(int argc, char *argv[]) {
-  printf("%s %s \n", argv[1], argv[0]);
-  if (!argv[1] || !argv[2]) // Must provide a read/write fifo
-        exit(-1);
-  std::ofstream ofs (argv[2], std::ofstream::out);
-  ofs << "lorem ipsum\n";
-  ofs.close();
-  std::ifstream ifs (argv[1], std::ifstream::in);
-  std::cout << "GOT:"<<ifs.get <<"\n";
-  ifs.close();
-  printf("passed fstreams\n");
+  std::array<shared_ptr<StellarKV>, N> nodes;
   // Create transport layer.
-  FakeRPCLayer rpc = FakeRPCLayer();
+  shared_ptr<FakeRPCLayer> rpc = make_shared<FakeRPCLayer>();
 
   // Create nodes.
   for (auto i =0; i < N-1; i++)
-    nodes[i] = new LocalNode(i, rpc);
+    nodes[i] = make_shared<StellarKV>(rpc, 0.8);
+  set<NodeID> s;
+  for (auto i =0; i < N-1; i++)
+    s.insert(nodes[i]->GetNodeID());
 
-  // Print IDs.
-  for (auto i=0; i < N-1; i++)
-    std::cout << nodes[i]->GetNodeID() << "\n";
+  for (auto i =0; i < N-1; i++)
+    nodes[i]->AddPeers(s);
+  nodes[0]->Put("test", "1");
+  printf("hello");
+  for (;;this_thread::sleep_for(chrono::seconds(1))){
+    printf("%s",nodes[0]->Get("test").first.second.c_str());
+  }
+  return 0;
+}
 
-  // Create quorum sets.
-  Quorum qs;
-  qs.threshold = 3;
-  qs.members = std::set<NodeID> {0, 1, 2, 3, 4};
 
-  // Add quorum sets to nodes.
-  for (auto i=0; i < N-1; i++)
-    nodes[i]->UpdateQurorum(qs);
 
-  // Print a nodes quorum set threshold.
-  nodes[1]->PrintQuorumSet();
 
-  // Update the quorum set.
-  nodes[5]  = new LocalNode(5, rpc);
-  nodes[1]->AddNodeToQuorum(nodes[5]->GetNodeID());
-  nodes[1]->PrintQuorumSet();
 
-  // Make a sample message.
-  Ballot dummyBallot;
-  dummyBallot.num = 1;
-  dummyBallot.value = "";
+// int main0(int argc, char *argv[]) {
+//   std::array<shared_ptr<StellarKV>, N> nodes;
+//   printf("%s %s \n", argv[1], argv[0]);
+//   if (!argv[1] || !argv[2]) // Must provide a read/write fifo
+//     exit(-1);
+//   std::ofstream ofs (argv[2], std::ofstream::out);
+//   ofs << "lorem ipsum\n";
+//   ofs.close();
+//   std::ifstream ifs (argv[1], std::ifstream::in);
+//   std::cout << "GOT:"<<ifs.get() <<"\n";
+//   ifs.close();
+//   printf("passed fstreams\n");
+//   // Create transport layer.
+//   FakeRPCLayer rpc = FakeRPCLayer();
 
-  // auto samplePrepareMsg = std::make_shared<PrepareMessage>(
-  //     nodes[0]->GetNodeID(),
-  //     0,
-  //     dummyBallot,
-  //     dummyBallot,
-  //     dummyBallot,
-  //     dummyBallot,
-  //     nodes[0]->GetQuorumSet());
+//   // Create nodes.
+//   for (auto i =0; i < N-1; i++)
+//     nodes[i] = new LocalNode(i, rpc);
 
-  // nodes[0]->SendMessage(samplePrepareMsg);
-  nodes[0]->Propose("hello");
-  std::this_thread::yield();
-  std::this_thread::sleep_for(std::chrono::seconds(1));
-  // printf("sending duplicate message\n");
-  // nodes[0]->SendMessage(samplePrepareMsg);
+//   // Print IDs.
+//   for (auto i=0; i < N-1; i++)
+//     std::cout << nodes[i]->GetNodeID() << "\n";
 
-  // nodes[1]->ReceiveMessage();
+//   // Create quorum sets.
+//   Quorum qs;
+//   qs.threshold = 3;
+//   qs.members = std::set<NodeID> {0, 1, 2, 3, 4};
+
+//   // Add quorum sets to nodes.
+//   for (auto i=0; i < N-1; i++)
+//     nodes[i]->UpdateQurorum(qs);
+
+//   // Print a nodes quorum set threshold.
+//   nodes[1]->PrintQuorumSet();
+
+//   // Update the quorum set.
+//   nodes[5]  = new LocalNode(5, rpc);
+//   nodes[1]->AddNodeToQuorum(nodes[5]->GetNodeID());
+//   nodes[1]->PrintQuorumSet();
+
+//   // Make a sample message.
+//   Ballot dummyBallot;
+//   dummyBallot.num = 1;
+//   dummyBallot.value = "";
+
+//   // auto samplePrepareMsg = std::make_shared<PrepareMessage>(
+//   //     nodes[0]->GetNodeID(),
+//   //     0,
+//   //     dummyBallot,
+//   //     dummyBallot,
+//   //     dummyBallot,
+//   //     dummyBallot,
+//   //     nodes[0]->GetQuorumSet());
+
+//   // nodes[0]->SendMessage(samplePrepareMsg);
+//   nodes[0]->Propose("hello");
+//   std::this_thread::yield();
+//   std::this_thread::sleep_for(std::chrono::seconds(1));
+//   // printf("sending duplicate message\n");
+//   // nodes[0]->SendMessage(samplePrepareMsg);
+
+//   // nodes[1]->ReceiveMessage();
   
 
 
@@ -85,18 +114,18 @@ int main(int argc, char *argv[]) {
 
 
 
-  for (auto i=0; i < N; i++)
-    nodes[i]->Start();
+//   for (auto i=0; i < N; i++)
+//     nodes[i]->Start();
 
 
 
 
 
-  printf("Implementation coming soon\n");
-  while (true){
+//   printf("Implementation coming soon\n");
+//   while (true){
 
 
-  }
+//   }
 
-  return 0;
-}
+//   return 0;
+// }

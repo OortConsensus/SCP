@@ -5,13 +5,16 @@ using namespace DISTPROJ;
 using namespace DISTPROJ::Application::StellarKV;
 using namespace std;
 
-StellarKV::StellarKV(RPCLayer* rpc){
-  std::random_device rd ;
-  std::mt19937 gen(rd());
-  std::uniform_int_distribution<NodeID> dist(0, ~0);
+StellarKV::StellarKV(shared_ptr<RPCLayer> rpc, float tr)  : threshold_ratio(tr){
+  random_device rd ;
+  mt19937 gen(rd());
+  uniform_int_distribution<NodeID> dist(0, ~0);
   node = new LocalNode(dist(gen), *rpc, Quorum{});
   slot = 0;
-  t = new std::thread(&StellarKV::Tick, this);
+  t = new thread(&StellarKV::Tick, this);
+}
+NodeID StellarKV::GetNodeID(){
+  return node->GetNodeID();
 }
 void StellarKV::Tick() {
 
@@ -58,3 +61,25 @@ void StellarKV::Put(string k, string val){
   node->Propose(ss.str());
 }
 
+void StellarKV::AddPeer(NodeID n) {
+  node->AddNodeToQuorum(n);
+  node->SetThreshold(node->QuorumSize() * threshold_ratio);
+}
+void StellarKV::AddPeers(set<NodeID> nodes){
+
+  for (auto n : nodes) {
+    AddPeer(n);
+  }
+}
+
+void StellarKV::RemovePeer(NodeID n) {
+  node->RemoveNodeFromQuorum(n);
+  node->SetThreshold(node->QuorumSize() * threshold_ratio);
+}
+
+
+void StellarKV::RemovePeers(set<NodeID> nodes) {
+  for (auto n : nodes) {
+    RemovePeer(n);
+  }
+}
