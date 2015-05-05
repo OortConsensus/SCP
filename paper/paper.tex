@@ -21,10 +21,10 @@ problem of reliance on trusted third parties through its Byzantine
 Fault Tolerant consensus mechanism -- a proof of work based
 blockchain.
 
-Proof of work is a very costly and energy ineficient means to reaching
-consensus as it requires solving dicult problems which wastes
+Proof of work is a very costly and energy inefficient means to reaching
+consensus as it requires solving dificult problems which wastes
 computational resources.  Furthermore, transactions take a long time
-to conrm and security is in question if a single group at any point
+to confirm and security is in question if a single group at any point
 accounts for more than 50\% of the computing power.
 
 The Stellar Consensus Protocol\cite{stellar} is a design of a Federated Byzantine
@@ -37,18 +37,18 @@ are lower.
 
 
 \section{Stellar Consensus Protocol}
-The Stellar Consensus Protocol is a four-phase paxos-like consensus
+The Stellar Consensus Protocol is a four-phase Paxos-like consensus
 protocol. Nodes exchange a series of ballots to vote to confirm, then
 accept values. The protocol can be considered in a single instance
-(ie, determines one value) context, but it can also be easily extended
+(i.e., determines one value) context, but it can also be easily extended
 to multiple instance log replication. The Stellar Consensus protocol
-is rather complex; a large part of the effort for this project was in
-understanding the nuances of how it works. Here we'll give a
+is rather complex. As a result, a large part of the effort for this project was in
+understanding the subtlies of how it works. Here we give a
 best-effort summary on how it works, but for more understanding the
-full paper\cite{stellar} is neccesary. For simplicity, we will talk
+full paper\cite{stellar} is necessary. For simplicity, we will talk
 about how it works in the context of a single slot.
 
-Stellar Consensus Protocol hinges on a property called Quorum
+Stellar Consensus Protocol hinges on a property called quorum
 intersection.  Quorum intersection is the notion that all properly
 behaving nodes have connections.  This property is, more formally, the
 notion that you can remove some set of misbehaving nodes and nodes
@@ -91,11 +91,11 @@ have an effect on one another.
 The node maintains a quorum set of size $n$. It also chooses a
 parameter $m < n$ of which any set of $m+1$ nodes constitutes a quorum
 slice. Quorum selection is an open problem in Stellar Consensus
-Protocol, it is unclear how to get nodes to select quora such that
+Protocol, it is unclear how to get nodes to select quorums such that
 quorum intersection holds.
 
 \subsection{Proof Of Timeout}
-One open problem in Stellar Consensus is detemining the mechanism by
+One open problem in Stellar Consensus is determining the mechanism by
 which Nodes are allowed to propose arguments for the log. Stellar
 consensus can be extremely inefficient in terms of number of messages
 sent, especially with multiple proposers.
@@ -110,7 +110,7 @@ network activity. This also helps achieve anti-spam properties as
 well.
 
 Unlike in bitcoin, this proof-of-work is not directly incentivized,
-therefore hopefull less prone to the development of ASIC hardware to
+therefore hopefully less prone to the development of ASIC hardware to
 compute them. The only incentive is to spend funds more quickly.
 
 \subsection{StellarKV}
@@ -118,7 +118,7 @@ We implemented a simple key value store on top of the Stellar
 Consensus Protocol. The KV store has the following semantics:
 
 \paragraph{Get(Key)} returns a pair of Version and Value. Gets are not put in the log, they are served
-at whatevr slot the server has read up to. Entries are individually
+at whatever slot the server has read up to. Entries are individually
 versioned in any case.
 \paragraph{Put(Key, Value)}  reads the log like Get, and puts in an entry of Value under Key with Version + 1. Versions less than what is stored in the log will be ignored.
 
@@ -128,10 +128,10 @@ be a signed message by the key. This allows for the StellarKV to be
 used a configuration updating consensus protocol. Other invariants
 could be added per key perhaps as well. This could also serve as the
 start of storing a balance as well for a transaction system. Keys
-could also be modified to be hierarchal for better namespacing, eg
+could also be modified to be hierarchal for better name spacing, e.g.
 $Public Key||Pictures||10$.
 
-Versioning allows for a performant way of deduplicating entries which
+Versioning allows for a performant way of de-duplicating entries which
 get in the log at multiple slots. If a Version is younger than what is
 in the log, the updates are not applied. Of course, a user should keep
 track of the highest version they have sent and be sure that a server
