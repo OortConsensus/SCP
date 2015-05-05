@@ -101,7 +101,6 @@ int LocalNode::GetThreshold(){
 SlotNum LocalNode::Propose(std::string value){
   std::lock_guard<std::mutex> lock(mtx);
   auto i = NewSlot();
-  maxSlot++;
   auto b = Ballot{1, value};
   printf("Finding Nonce\n");
   auto nonce = generateNonce(&b, i);
@@ -112,7 +111,9 @@ SlotNum LocalNode::Propose(std::string value){
   return i;
 }
 SlotNum LocalNode::NewSlot(){
-  return maxSlot+1;
+  auto a = maxSlot;
+  maxSlot++;
+  return a;
 }
 
 void LocalNode::SendMessage(std::shared_ptr<Message> msg) {
