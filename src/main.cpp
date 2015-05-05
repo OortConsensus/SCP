@@ -47,6 +47,22 @@ int main(int argc, char *argv[]) {
       break;
     }
   }
+
+  nodes[0]->Put("test2", "MESSAGE2");
+  nodes[1]->Put("test2", "MESSAGE2");
+  for (;;this_thread::sleep_for(chrono::seconds(1))){
+    auto count = N;
+    for (auto n : nodes) {
+      auto r = n->Get("test2");
+      if (r.second){
+        printf("Key was set to (%s) on %llu\n",r.first.second.c_str(), n->GetNodeID());
+        count--;
+      }
+    }
+    if (count == 0) {
+      break;
+    }
+  }
   printf("COMPLETE\n");
   return 0;
 }
