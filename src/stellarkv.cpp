@@ -57,12 +57,35 @@ void StellarKV::Put(string k, string val){
     v = 0;
   }
   ostringstream ss;
+  auto putmessage = make_shared<PutMessage>(k,val,v+1);
   {
     cereal::JSONOutputArchive archive(ss);
-    auto putmessage = make_shared<PutMessage>(k,val,v+1);
     archive(CEREAL_NVP(putmessage));
   }
-  node->Propose(ss.str());
+  SlotNum maybeSlot;
+  auto waiting = true;
+  while (waiting){
+    maybeSlot = node->Propose(ss.str());
+    for (auto i = 0; i<10; i++) {
+      auto p = node->View(maybeSlot);
+      if (p.second) {
+        shared_ptr<PutMessage> m;
+        std::istringstream ss;
+        ss.str(p.first);
+          
+        {
+          cereal::JSONInputArchive archive(ss);
+          archive(m);
+        }
+        if (*m == *putmessage) {
+          waiting = false;
+          break;
+        }
+        std::this_thread::sleep_for(std::chrono::seconds(10));
+      }
+    }
+    
+  }
   return;
 }
 int StellarKV::GetThreshold(){
