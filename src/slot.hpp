@@ -15,6 +15,7 @@ namespace DISTPROJ {
   class FinishMessage;
   class LocalNode;
   enum Phase { PREPARE, FINISH, EXTERNALIZE };
+  std::map<Phase, std::string> Phase_s= {{PREPARE, "Prepare"}, {FINISH, "Finish"}, {EXTERNALIZE, "Externalize"}};
 
   struct SlotState {
     Ballot b;

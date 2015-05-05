@@ -45,12 +45,12 @@ void Slot::handle(std::shared_ptr<Message> _msg){
       auto from = pmsg->from();
 
       // Check if we are already done.
+      lastDefined(from, &last);
+      if (pmsg->follows(last)) {
       if (phi == EXTERNALIZE) {
         node->SendMessageTo(Finish(),from);
         return;
       }
-      lastDefined(from, &last);
-      if (pmsg->follows(last)) {
         handle(pmsg);
         M[from] = pmsg;
       }
@@ -62,12 +62,12 @@ void Slot::handle(std::shared_ptr<Message> _msg){
       auto from = fmsg->from();
 
       // Check if we are already done.
+      lastDefined(from, &last);
+      if (fmsg->follows(last)) {
       if (phi == EXTERNALIZE) {
         node->SendMessageTo(Finish(),from);
         return;
       }
-      lastDefined(from, &last);
-      if (fmsg->follows(last)) {
         handle(fmsg);
         M[from] = fmsg;
       }
@@ -257,7 +257,7 @@ void Slot::handle(std::shared_ptr<FinishMessage> msg) {
 }
 // Dump state / received message inforamtion.
 void Slot::Dump(){
-  printf("id: %llu, slot: %llu, b: %d, p: %d, p_: %d, c:%d, Phase %s\n",node->GetNodeID(),state.slotNum, state.b.num,state.p.num,state.p_.num, state.c.num, phi == PREPARE ? "Prepare" : "After Prepare");
+  printf("id: %llu, slot: %llu, b: %d, p: %d, p_: %d, c:%d, Phase %s\n",node->GetNodeID(),state.slotNum, state.b.num,state.p.num,state.p_.num, state.c.num, Phase_s[phi].c_str());
 }
 
 void handlePrepare(NodeID v, Quorum& d, SlotState vState){
