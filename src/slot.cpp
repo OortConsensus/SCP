@@ -203,26 +203,26 @@ void Slot::handle(std::shared_ptr<FinishMessage> msg) {
   }
   if (phi == FINISH && state.b == state.p && state.b == state.c && msg->b == state.b){ // RULE 4
     // Check that this node ~confirms~ b.
-    auto b_commit = 0;
+    auto b_commit = node->quorumSet.threshold;
     for (auto kp : M) {
       auto m = kp.second;
       switch (m->type()) {
       case FinishMessage_t:
         if ((std::static_pointer_cast<FinishMessage>(m))->b == state.c){ // Finish -> b == Prepare -> c
-          b_commit +=1;
+          b_commit--;
         }
-          
         break;
       case PrepareMessage_t:
         if ( (std::static_pointer_cast<PrepareMessage>(m))->c == state.c){
-          b_commit +=1;
+          b_commit--;
         }
         break;
       }
-    }
 
-    if (b_commit > node->quorumSet.threshold) {
-      phi = EXTERNALIZE;
+      if (b_commit == 0) {
+        phi = EXTERNALIZE;
+        break;
+      }
     }
   } else {
     // TODO : Might need to check for a v-blocking set and go back into the 
