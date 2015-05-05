@@ -140,7 +140,7 @@ bool LocalNode::ReceiveMessage(std::shared_ptr<Message>* msg) {
 void LocalNode::ProcessMessage(std::shared_ptr<Message> msg) {
   auto slot = msg -> getSlot();
   if (log.find(slot) == log.end()) {
-    log[slot] = new Slot(slot, this);
+    log[slot] =std::make_shared<Slot>(slot, this);
     if (slot > maxSlot) {
       maxSlot = slot;
     }

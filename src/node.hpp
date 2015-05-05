@@ -68,7 +68,7 @@ namespace DISTPROJ {
     std::mutex mtx;
     SlotNum NewSlot(); // only one of these can run at a time
     void Tick();
-    std::map<SlotNum, Slot*> log;
+    std::map<SlotNum, std::shared_ptr<Slot>> log;
     std::set<NodeID> knownNodes;
     MessageClient * mc;
 
