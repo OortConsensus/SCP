@@ -35,12 +35,19 @@ int main(int argc, char *argv[]) {
   printf("Need to get %i nodes to agree out of %i nodes\n",nodes[0]->GetThreshold(), N);
   nodes[0]->Put("test", "MESSAGE");
   for (;;this_thread::sleep_for(chrono::seconds(1))){
-    auto r = nodes[0]->Get("test");
-    // if (r.second){
-      printf("Key was set to (%s)\n",r.first.second.c_str());
-      // break;
-    // }
+    auto count = N;
+    for (auto n : nodes) {
+      auto r = n->Get("test");
+      if (r.second){
+        printf("Key was set to (%s) on %llu\n",r.first.second.c_str(), n->GetNodeID());
+        count--;
+      }
+    }
+    if (count == 0) {
+      break;
+    }
   }
+  printf("COMPLETE\n");
   return 0;
 }
 
