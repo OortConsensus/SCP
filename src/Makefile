@@ -20,12 +20,13 @@ LIBS = -lssl -lcrypto
 
 # Source files.
 ifeq ($(APP),comet)
-SRCS += main.cpp
+SRCS += $(COMET_DIR)/main.cpp
 SRCS += $(COMET_DIR)/client.cpp $(COMET_DIR)/server.cpp
 INCLUDES += -I $(COMET_DIR)
 endif
 
 ifeq ($(APP),asteroid)
+SRCS += $(ASTEROID_DIR)/main.cpp
 SRCS += $(ASTEROID_DIR)/stellarkv.cpp
 INCLUDES += -I $(ASTEROID_DIR)
 endif
