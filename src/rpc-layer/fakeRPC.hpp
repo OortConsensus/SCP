@@ -1,4 +1,3 @@
-
 #ifndef FAKE_RPC_H
 #define FAKE_RPC_H
 
@@ -6,7 +5,6 @@
 #include <vector>
 #include <map>
 #include <memory>
-
 #include <set>
 
 #include "common.hpp"
@@ -14,9 +12,7 @@
 #include "RPC.hpp"
 
 namespace DISTPROJ {
-
   class Node;
-
   class Message;
   class MessageClient;
 
@@ -45,7 +41,6 @@ namespace DISTPROJ {
     void Broadcast(std::shared_ptr<Message> msg, std::set<NodeID> peers);
     NodeID GetNodeID(){return id;};
   };
-
 }
 
 #endif
