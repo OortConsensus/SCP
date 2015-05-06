@@ -24,7 +24,7 @@ void ServerKV::Put(PutArgs &args, PutReply &reply) {
 
   Operation op;
   op.id = args.id;
-  op.opType = "PUT";
+  op.opType = PUT;
   op.key = args.key;
   op.value = args.value;
 
@@ -37,7 +37,7 @@ void ServerKV::Get(GetArgs &args, GetReply &reply) {
 
   Operation op;
   op.id = args.id;
-  op.opType = "GET";
+  op.opType = GET;
   op.key = args.key;
 
   reply.value = ApplyOperation(op);
@@ -90,11 +90,14 @@ std::string ServerKV::ApplyOperation(Operation &op) {
 
     // Apply operation.
     std::string result = "";
-    if (decidedOp.opType == "GET") {
-        seen[decidedOp.id] = db[decidedOp.key];
-    } else if (decidedOp.opType == "PUT") {
-        seen[decidedOp.id] = "";
-        db[decidedOp.key] = decidedOp.value;
+    switch (decidedOp.opType) {
+    case GET:
+      seen[decidedOp.id] = db[decidedOp.key];
+      break;
+    case PUT:
+      seen[decidedOp.id] = "";
+      db[decidedOp.key] = decidedOp.value;
+      break;
     }
     curSlot++;
 

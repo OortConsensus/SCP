@@ -23,12 +23,14 @@ ifeq ($(APP),comet)
 SRCS += $(COMET_DIR)/main.cpp
 SRCS += $(COMET_DIR)/client.cpp $(COMET_DIR)/server.cpp
 INCLUDES += -I $(COMET_DIR)
+MAIN = comet
 endif
 
 ifeq ($(APP),asteroid)
 SRCS += $(ASTEROID_DIR)/main.cpp
 SRCS += $(ASTEROID_DIR)/stellarkv.cpp
 INCLUDES += -I $(ASTEROID_DIR)
+MAIN = asteroid
 endif
 
 SRCS += $(RPC_DIR)/RPC.cpp $(RPC_DIR)/fakeRPC.cpp
@@ -36,8 +38,6 @@ SRCS += $(SCP_DIR)/message.cpp $(SCP_DIR)/node.cpp $(SCP_DIR)/slot.cpp
 
 # define the C source files
 OBJS = $(join $(dir $(SRCS)), $(notdir $(SRCS:.cpp=.o)))
-
-MAIN = main
 
 .PHONY: clean
 

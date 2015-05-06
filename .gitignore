@@ -30,7 +30,7 @@
 main
 
 # Library
-src/cereal
+src/lib/cereal
 
 # Python
 *.pyc

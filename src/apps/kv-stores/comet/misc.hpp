@@ -20,8 +20,7 @@ namespace DISTPROJ {
       // TODO : Change to enum.
       typedef std::string Err;
 
-      //enum OpType { GET, PUT };
-      typedef std::string OpType;
+      enum OpType { GET, PUT };
 
       struct Operation {
         OpType opType;
@@ -31,7 +30,10 @@ namespace DISTPROJ {
 
         template<class Archive>
         void serialize(Archive & archive) {
-          archive(CEREAL_NVP(opType), CEREAL_NVP(id), CEREAL_NVP(key), CEREAL_NVP(value));
+          archive(CEREAL_NVP(opType), 
+                  CEREAL_NVP(id), 
+                  CEREAL_NVP(key), 
+                  CEREAL_NVP(value));
         }
       };
 
