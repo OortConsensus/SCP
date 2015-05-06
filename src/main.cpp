@@ -42,9 +42,6 @@ int main(int argc, char *argv[]) {
 
   printf("About to make request\n");
   clients[0]->Put("1", "Test");
-  clients[0]->Put("3", "Test");
-  clients[0]->Put("1", "Test32");
-  clients[0]->Put("r41", "Test");
   printf("The value at %s is %s\n", "1", clients[0]->Get("1").c_str());
 
 
