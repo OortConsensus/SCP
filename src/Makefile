@@ -40,7 +40,7 @@ INCLUDES += -I $(ASTEROID_DIR)
 MAIN = $(BIN_DIR)/asteroid
 endif
 
-SRCS += $(RPC_DIR)/RPC.cpp $(RPC_DIR)/fakeRPC.cpp
+SRCS += $(RPC_DIR)/fakeRPC.cpp
 SRCS += $(SCP_DIR)/message.cpp $(SCP_DIR)/node.cpp $(SCP_DIR)/slot.cpp
 
 # define the C source files

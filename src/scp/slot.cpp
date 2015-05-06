@@ -23,7 +23,6 @@ std::shared_ptr<FinishMessage> Slot::Finish() {
   return p;
 }
 
-
 void Slot::lastDefined(NodeID from, std::shared_ptr<Message>* last) {
   try {
     *last = M.at(from);
@@ -33,6 +32,7 @@ void Slot::lastDefined(NodeID from, std::shared_ptr<Message>* last) {
   }
 
 }
+
 void Slot::handle(std::shared_ptr<Message> _msg){
   // Add the message to be the last message seen
   // Handle the response
@@ -45,6 +45,13 @@ void Slot::handle(std::shared_ptr<Message> _msg){
     {
       auto pmsg = std::static_pointer_cast<PrepareMessage>( _msg);
       auto from = pmsg->from();
+
+      if (node->GetQuorumSet().members.find(from) == node->GetQuorumSet().members.end()) {
+        // Don't let message from nodes not in one of your quorum slices
+        // change your state. Don't process the message.
+        // TODO : Check that this is actually the behavior we want.
+        return;
+      }
 
       // Check if we are already done.
       lastDefined(from, &last);
@@ -62,6 +69,13 @@ void Slot::handle(std::shared_ptr<Message> _msg){
     {
       auto fmsg = std::static_pointer_cast<FinishMessage>( _msg);
       auto from = fmsg->from();
+      
+      if (node->GetQuorumSet().members.find(from) == node->GetQuorumSet().members.end()) {
+        // Don't let message from nodes not in one of your quorum slices
+        // change your state. Don't process the message.
+        // TODO : Check that this is actually the behavior we want.
+        return;
+      }
 
       // Check if we are already done.
       lastDefined(from, &last);
@@ -263,10 +277,3 @@ void Slot::Dump(){
   printf("Dumping id: %llu\n    slot: %u, b: %d, p: %d, p_: %d, c:%d \n%s\n, Phase %s\n",node->GetNodeID(),state.slotNum, state.b.num,state.p.num,state.p_.num, state.c.num,state.c.value.c_str(), Phase_s().c_str());
 }
 
-void handlePrepare(NodeID v, Quorum& d, SlotState vState){
-  // TODO
-}
-
-void handleFinish(NodeID v, Quorum& d, SlotState vState){
-  // TODO
-}

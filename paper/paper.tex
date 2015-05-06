@@ -149,7 +149,7 @@ comet/client.cpp, comet/common.hpp, and comet/server.cpp.
 Comet replicas stay identical unless some lag behind, in which case they 
 are able to catch back up.
 
-The Comet clients tries different replicas until one responds. Calls to Client.Get() and
+The Comet clients try different replicas until one responds. Calls to Client.Get() and
 Client.Put() appear to have affected all replicas in the same order and have
 at-most-once semantics.
 
