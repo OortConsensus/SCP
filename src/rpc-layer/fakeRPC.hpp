@@ -7,6 +7,8 @@
 #include <map>
 #include <memory>
 
+#include <set>
+
 #include "common.hpp"
 #include "queue.hpp"
 #include "RPC.hpp"
@@ -30,7 +32,7 @@ namespace DISTPROJ {
 
     void Send(std::shared_ptr<Message> msg, NodeID id, NodeID peerID);
     bool Receive(std::shared_ptr<Message>* msg, NodeID id);    
-    void Broadcast(std::shared_ptr<Message> msg, NodeID id);
+    void Broadcast(std::shared_ptr<Message> msg, NodeID id, std::set<NodeID> peers);
   };
 
   class MessageClient{
@@ -40,7 +42,7 @@ namespace DISTPROJ {
     MessageClient(NodeID id, RPCLayer* r);
     void Send(std::shared_ptr<Message> msg, NodeID peerID);
     bool Receive(std::shared_ptr<Message>* msg);    
-    void Broadcast(std::shared_ptr<Message> msg);
+    void Broadcast(std::shared_ptr<Message> msg, std::set<NodeID> peers);
     NodeID GetNodeID(){return id;};
   };
 

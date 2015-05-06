@@ -138,7 +138,7 @@ SlotNum LocalNode::NewSlot(){
 
 void LocalNode::SendMessage(std::shared_ptr<Message> msg) {
   // TODO : interface with FakeRPC.
-  mc->Broadcast(msg);
+  mc->Broadcast(msg, GetQuorumSet().members);
 }
 
 void LocalNode::SendMessageTo(std::shared_ptr<Message> msg, NodeID i) {
