@@ -68,6 +68,8 @@ void StellarKV::Put(string k, string val){
     maybeSlot = node->Propose(ss.str());
     for (auto i = 0; i<10; i++) {
       auto p = node->View(maybeSlot);
+      printf("STATE %d %s\n", p.second, putmessage->Value.c_str());
+
       if (p.second) {
         shared_ptr<PutMessage> m;
         std::istringstream ss;
@@ -78,11 +80,12 @@ void StellarKV::Put(string k, string val){
           archive(m);
         }
         if (*m == *putmessage) {
+          
           waiting = false;
           break;
         }
-        std::this_thread::sleep_for(std::chrono::seconds(10));
       }
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     
   }

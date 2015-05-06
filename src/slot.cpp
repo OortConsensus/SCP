@@ -37,7 +37,7 @@ void Slot::handle(std::shared_ptr<Message> _msg){
   // Add the message to be the last message seen
   // Handle the response
   std::shared_ptr<Message> last;
-  Dump();
+  // Dump();
   switch (_msg->type()) {
   case PrepareMessage_t:
     {
@@ -78,10 +78,10 @@ void Slot::handle(std::shared_ptr<Message> _msg){
     break;
   }
 
-  Dump();
+  // Dump();
 }
 void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
-  printf("PREPARE\n");
+  // printf("PREPARE\n");
   bool returnNow = false;
   // If phase is not prepare, return
   if (phi != PREPARE ) {
@@ -118,7 +118,7 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
 
   // NOTE : the > operator does not accomplish the logic below.
   if (compatible(msg->b, state.p) || state.p == NILBALLOT){ 
-    printf("compatible\n");
+    // printf("compatible\n");
     // Now check that one of our quorum slices has all voted for or 
     // accepted b.
     auto b_voted_or_accepted = node->quorumSet.threshold;
@@ -145,7 +145,7 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
         break;
       }
     }
-    printf("need %d votes", b_voted_or_accepted);
+    // printf("need %d votes", b_voted_or_accepted);
 
   } else {
     // Statement contradicted. Check for v-blocking.
@@ -217,7 +217,7 @@ void Slot::handle(std::shared_ptr<PrepareMessage> msg) {
 
 }
 void Slot::handle(std::shared_ptr<FinishMessage> msg) {
-  printf("Finish\n");
+  // printf("Finish\n");
   // Finish message implies every statement implied by Prepare v i b b 0 b D.
   auto p = std::make_shared<PrepareMessage>(node->GetNodeID(), state.slotNum, state.b, state.b, Ballot{}, state.b, node->GetQuorumSet(),0); 
   // handle(p);
@@ -243,7 +243,7 @@ void Slot::handle(std::shared_ptr<FinishMessage> msg) {
         }
         break;
       }
-      printf("Externalizing need %d", b_commit);
+      // printf("Externalizing need %d", b_commit);
       if (b_commit == 0) {
         phi = EXTERNALIZE;
         break;

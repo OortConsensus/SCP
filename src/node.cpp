@@ -131,7 +131,7 @@ bool LocalNode::ReceiveMessage(std::shared_ptr<Message>* msg) {
   if (received && msg) {
 
     // PRINT here just to show we got it 
-    printf("Got a message\n");
+    // printf("Got a message\n");
     return true;
   }
   return false;
@@ -159,8 +159,8 @@ void LocalNode::DumpLog() {
 std::pair<std::string, bool> LocalNode::View(SlotNum s){
   std::lock_guard<std::mutex> lock(mtx);
   try{
-    printf("VIEW: %s\n", log.at(s)->Phase_s().c_str());
-    return std::pair<std::string, bool>(log.at(s)->GetValue(), log.at(s)->GetPhase() == EXTERNALIZE);
+    bool b = log.at(s)->GetPhase() == EXTERNALIZE;
+    return std::pair<std::string, bool>(log.at(s)->GetValue(), b);
   } catch (std::out_of_range){
     return std::pair<std::string, bool>("", false);
   }
