@@ -2,6 +2,7 @@
 CC = gcc
 CXX = g++
 CFLAGS = -Wall -g -std=c++11  -Wno-deprecated-declarations
+PARAMS =
 
 BIN_DIR=../bin
 
@@ -19,6 +20,10 @@ INCLUDES = -I $(RPC_DIR) -I $(LIB_DIR) -I $(SCP_DIR) -I $(UTIL_DIR)
 LFLAGS = 
 # define any libraries to link into executable:, e.g. -l
 LIBS = -lssl -lcrypto
+
+ifeq ($(VERBOSE),1)
+PARAMS += -DVERBOSE
+endif
 
 # Source files.
 ifeq ($(APP),comet)
@@ -47,14 +52,14 @@ all:$(MAIN)
 	@echo  Built to $(MAIN)
 
 $(MAIN): $(OBJS) 
-	$(CXX) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
+	$(CXX) $(PARAMS) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
 
 ## Generic compilation rule
 %.o : %.cpp
 	@mkdir -p $(dir $@)
 	@echo "============="
 	@echo "Compiling $<"
-	$(CXX) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CXX) $(PARAMS) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	$(RM) *.o *~ $(MAIN) $(OBJS)

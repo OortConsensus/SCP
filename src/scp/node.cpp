@@ -62,7 +62,9 @@ void LocalNode::Tick() {
 }
 
 void LocalNode::Start() {
+#ifdef VERBOSE
   printf(" Start\n");
+#endif
   if (t == nullptr) {
     t = new std::thread(&LocalNode::Tick, this);
   }
@@ -114,12 +116,18 @@ SlotNum LocalNode::Propose(std::string value){
 void LocalNode::Propose(std::string value, SlotNum sn){
   std::lock_guard<std::mutex> lock(mtx);
   auto b = Ballot{1, value};
+#ifdef VERBOSE
   printf("Finding Nonce\n");
+#endif
   auto nonce = generateNonce(&b, sn);
+#ifdef VERBOSE
   printf("Nonce Found %llu\n", nonce);
+#endif
   auto m = std::make_shared<PrepareMessage>(id, sn, b, Ballot{}, Ballot{}, Ballot{}, quorumSet, 0); /* TODO; resending etc */
   SendMessage(m);
+#ifdef VERBOSE
   printf("messages sent\n");
+#endif
 }
 
 SlotNum LocalNode::NewSlot(){
@@ -143,7 +151,9 @@ bool LocalNode::ReceiveMessage(std::shared_ptr<Message>* msg) {
   if (received && msg) {
 
     // PRINT here just to show we got it 
+#ifdef VERBOSE
     printf("Got a message\n");
+#endif
     return true;
   }
   return false;
@@ -171,7 +181,9 @@ void LocalNode::DumpLog() {
 std::pair<std::string, bool> LocalNode::View(SlotNum s){
   std::lock_guard<std::mutex> lock(mtx);
   try{
+#ifdef VERBOSE
     printf("VIEW: %s\n", log.at(s)->Phase_s().c_str());
+#endif
     return std::pair<std::string, bool>(log.at(s)->GetValue(), log.at(s)->GetPhase() == EXTERNALIZE);
   } catch (std::out_of_range){
     return std::pair<std::string, bool>("", false);

@@ -64,7 +64,6 @@ std::string ServerKV::ApplyOperation(Operation &op) {
         cereal::JSONInputArchive archive(ss);
         archive(decidedOp);
       }
-      printf("BAM key %s val %s\n", decidedOp.key.c_str(), decidedOp.value.c_str());
     } else {
       // Propose.
       std::ostringstream ss;
@@ -75,7 +74,6 @@ std::string ServerKV::ApplyOperation(Operation &op) {
       node->Propose(ss.str(), newSlot);
 
       // Wait for a decision.
-      printf("about to read decision.\n");
       while (!p.second) {
         p = node->View(newSlot);
       }
@@ -85,7 +83,6 @@ std::string ServerKV::ApplyOperation(Operation &op) {
         cereal::JSONInputArchive archive(iss);
         archive(decidedOp);
       }
-      printf("BAM key %s val %s\n", decidedOp.key.c_str(), decidedOp.value.c_str());
     }
 
     // Apply operation.

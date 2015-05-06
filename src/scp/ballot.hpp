@@ -32,7 +32,9 @@ namespace DISTPROJ {
   }
 
   inline bool operator==(const Ballot& lhs, const Ballot& rhs) {
+#ifdef VERBOSE
     printf("comparing %s %s \n", lhs.value.c_str(), rhs.value.c_str());
+#endif
     return lhs.num == rhs.num && lhs.value == rhs.value;
   }
   inline bool operator!=(const Ballot& lhs, const Ballot& rhs) {
