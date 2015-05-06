@@ -113,15 +113,19 @@ Unlike in bitcoin, this proof-of-work is not directly incentivized,
 therefore hopefully less prone to the development of ASIC hardware to
 compute them. The only incentive is to spend funds more quickly.
 
-\subsection{StellarKV}
-We implemented a simple key value store on top of the Stellar
-Consensus Protocol. The KV store has the following semantics:
+\subsection{Applications}
+We implemented two simple key value stores on top of the Stellar
+Consensus Protocol: Asteroid and Comet.
+
+\subsubsection*{Asteroid}
+
+The Asteroid KV store has the following semantics:
 
 \paragraph{Get(Key)} returns a pair of Version and Value. Gets are not put in the log, they are served
 at whatever slot the server has read up to. Entries are individually
 versioned in any case.
-\paragraph{Put(Key, Value)}  reads the log like Get, and puts in an entry of Value under Key with Version + 1. Versions less than what is stored in the log will be ignored.
 
+\paragraph{Put(Key, Value)}  reads the log like Get, and puts in an entry of Value under Key with Version + 1. Versions less than what is stored in the log will be ignored.
 
 In a more full implementation, Key can be a public key, and value can
 be a signed message by the key. This allows for the StellarKV to be
@@ -136,6 +140,18 @@ get in the log at multiple slots. If a Version is younger than what is
 in the log, the updates are not applied. Of course, a user should keep
 track of the highest version they have sent and be sure that a server
 reflects that change eventually.
+
+\subsubsection*{Comet}
+
+The Comet KV store was designed to mirror the 6.824 labs. Comet consists of
+comet/client.cpp, comet/common.hpp, and comet/server.cpp.
+
+Comet replicas stay identical unless some lag behind, in which case they 
+are able to catch back up.
+
+The Comet clients tries different replicas until one responds. Calls to Client.Get() and
+Client.Put() appear to have affected all replicas in the same order and have
+at-most-once semantics.
 
 \subsection{Consensus Overview}
 \bibliographystyle{abbrv}
