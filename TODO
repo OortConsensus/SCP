@@ -27,6 +27,8 @@ TODO:
 DONE:
 	Finish Consensus Stuff:
 		   - incrementing ballots? -- Pretty sure (JHH)
+       - only broadcast messages to your peers
+       - only let messages from your peers change your state.
 	Proposer Function to make new ballots
 			 - Picking a slot
 			 - Use light HashCash for random timeouts?
