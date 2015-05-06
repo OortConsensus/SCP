@@ -62,3 +62,6 @@ src/lib/cereal
 *.synctex.gz
 *.fdb_latexmk
 *.fls
+
+# Binaries
+bin

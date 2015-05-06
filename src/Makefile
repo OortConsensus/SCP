@@ -3,6 +3,8 @@ CC = gcc
 CXX = g++
 CFLAGS = -Wall -g -std=c++11  -Wno-deprecated-declarations
 
+BIN_DIR=../bin
+
 # Source and header dirs.
 RPC_DIR=./rpc-layer
 SCP_DIR=./scp
@@ -23,14 +25,14 @@ ifeq ($(APP),comet)
 SRCS += $(COMET_DIR)/main.cpp
 SRCS += $(COMET_DIR)/client.cpp $(COMET_DIR)/server.cpp
 INCLUDES += -I $(COMET_DIR)
-MAIN = comet
+MAIN = $(BIN_DIR)/comet
 endif
 
 ifeq ($(APP),asteroid)
 SRCS += $(ASTEROID_DIR)/main.cpp
 SRCS += $(ASTEROID_DIR)/stellarkv.cpp
 INCLUDES += -I $(ASTEROID_DIR)
-MAIN = asteroid
+MAIN = $(BIN_DIR)/asteroid
 endif
 
 SRCS += $(RPC_DIR)/RPC.cpp $(RPC_DIR)/fakeRPC.cpp
@@ -42,7 +44,7 @@ OBJS = $(join $(dir $(SRCS)), $(notdir $(SRCS:.cpp=.o)))
 .PHONY: clean
 
 all:$(MAIN) 
-	@echo  Stellar has been compiled
+	@echo  Built to $(MAIN)
 
 $(MAIN): $(OBJS) 
 	$(CXX) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
@@ -60,4 +62,4 @@ clean:
 cereal:
 	git clone https://github.com/USCiLab/cereal.git cer
 	cp -r cer/include/cereal ./lib
-	rm iri cer
+	rm -rf cer
