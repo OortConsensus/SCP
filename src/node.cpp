@@ -110,6 +110,18 @@ SlotNum LocalNode::Propose(std::string value){
   printf("messages sent\n");
   return i;
 }
+
+void LocalNode::Propose(std::string value, SlotNum sn){
+  std::lock_guard<std::mutex> lock(mtx);
+  auto b = Ballot{1, value};
+  printf("Finding Nonce\n");
+  auto nonce = generateNonce(&b, sn);
+  printf("Nonce Found %llu\n", nonce);
+  auto m = std::make_shared<PrepareMessage>(id, sn, b, Ballot{}, Ballot{}, Ballot{}, quorumSet, 0); /* TODO; resending etc */
+  SendMessage(m);
+  printf("messages sent\n");
+}
+
 SlotNum LocalNode::NewSlot(){
   auto a = maxSlot;
   //maxSlot++;

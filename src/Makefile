@@ -9,7 +9,7 @@ LFLAGS =
 # define any libraries to link into executable:, e.g. -l
 LIBS = -lssl -lcrypto
 # define the C source files
-SRCS = message.cpp RPC.cpp fakeRPC.cpp slot.cpp node.cpp main.cpp stellarkv.cpp
+SRCS = server.cpp client.cpp message.cpp RPC.cpp fakeRPC.cpp slot.cpp node.cpp main.cpp 
 OBJS = $(SRCS:.cpp=.o)
 MAIN = main
 

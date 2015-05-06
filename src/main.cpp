@@ -10,82 +10,166 @@
 #include <chrono>
 #include <thread>
 #include <fstream>
-#include "stellarkv.hpp"
+//#include "stellarkv.hpp"
+#include "server.hpp"
+#include "client.hpp"
 
 using namespace DISTPROJ;
-using namespace DISTPROJ::Application::StellarKV;
+//using namespace DISTPROJ::Application::StellarKV;
+using namespace DISTPROJ::Application::KVStellar;
 using namespace std;
-const int N = 6;
+const int Server_N = 6;
+const int Client_N = 2;
 
 int main(int argc, char *argv[]) {
-  std::array<shared_ptr<StellarKV>, N> nodes;
+  std::array<shared_ptr<ServerKV>, Server_N> servers;
   // Create transport layer.
   shared_ptr<FakeRPCLayer> rpc = make_shared<FakeRPCLayer>();
 
-  // Create nodes.
-  for (auto i =0; i < N; i++)
-    nodes[i] = make_shared<StellarKV>(rpc, 0.8);
+  // Create servers.
+  for (auto i =0; i < Server_N; i++)
+    servers[i] = make_shared<ServerKV>(rpc, 0.8);
   set<NodeID> s;
-  for (auto i =0; i < N; i++)
-    s.insert(nodes[i]->GetNodeID());
+  for (auto i =0; i < Server_N; i++)
+    s.insert(servers[i]->GetNodeID());
+  for (auto i =0; i < Server_N; i++)
+    servers[i]->AddPeers(s);
 
-  for (auto i =0; i < N; i++) {
-    nodes[i]->AddPeers(s);
-  }
-  printf("Need to get %i nodes to agree out of %i nodes\n",nodes[0]->GetThreshold(), N);
-  nodes[0]->Put("test", "MESSAGE");
-  for (;;this_thread::sleep_for(chrono::seconds(1))){
-    auto count = N;
-    for (auto n : nodes) {
-      auto r = n->Get("test");
-      if (r.second){
-        printf("Key was set to (%s) on %llu\n",r.first.second.c_str(), n->GetNodeID());
-        count--;
-      }
-    }
-    if (count == 0) {
-      break;
-    }
-  }
+  // Create clients.
+  std::array<ClientKV*, Client_N> clients;
+  for (auto i=0; i < Client_N; i++)
+    clients[i] = new ClientKV(servers[0], "");
 
-  //nodes[0]->Put("test2", "MESSAGE2");
-  nodes[1]->Put("test2", "MESSAGE2");
-  for (;;this_thread::sleep_for(chrono::seconds(1))){
-    auto count = N;
-    for (auto n : nodes) {
-      auto r = n->Get("test2");
-      if (r.second){
-        printf("Key was set to (%s) on %llu\n",r.first.second.c_str(), n->GetNodeID());
-        count--;
-      }
-    }
-    if (count == 0) {
-      break;
-    }
-  }
+  printf("About to make request\n");
+  clients[0]->Put("1", "Test");
+  clients[0]->Put("3", "Test");
+  clients[0]->Put("1", "Test32");
+  clients[0]->Put("r41", "Test");
+  printf("The value at %s is %s\n", "1", clients[0]->Get("1").c_str());
 
 
-  
-  nodes[0]->Put("test3", "MESSAGE3.1");
-  nodes[1]->Put("test3", "MESSAGE3.2");
-  for (;;this_thread::sleep_for(chrono::seconds(1))){
-    auto count = N;
-    for (auto n : nodes) {
-      auto r = n->Get("test3");
-      if (r.second){
-        printf("Key was set to (%s) on %llu\n",r.first.second.c_str(), n->GetNodeID());
-        count--;
-      }
-    }
-    if (count == 0) {
-      break;
-    }
-  }
-  printf("COMPLETE\n");
+
+  //printf("Need to get %i nodes to agree out of %i nodes\n",nodes[0]->GetThreshold(), N);
+  //nodes[0]->Put("test", "MESSAGE");
+  //for (;;this_thread::sleep_for(chrono::seconds(1))){
+  //  auto count = N;
+  //  for (auto n : nodes) {
+  //    auto r = n->Get("test");
+  //    if (r.second){
+  //      printf("Key was set to (%s) on %llu\n",r.first.second.c_str(), n->GetNodeID());
+  //      count--;
+  //    }
+  //  }
+  //  if (count == 0) {
+  //    break;
+  //  }
+  //}
+
+  ////nodes[0]->Put("test2", "MESSAGE2");
+  //nodes[1]->Put("test2", "MESSAGE2");
+  //for (;;this_thread::sleep_for(chrono::seconds(1))){
+  //  auto count = N;
+  //  for (auto n : nodes) {
+  //    auto r = n->Get("test2");
+  //    if (r.second){
+  //      printf("Key was set to (%s) on %llu\n",r.first.second.c_str(), n->GetNodeID());
+  //      count--;
+  //    }
+  //  }
+  //  if (count == 0) {
+  //    break;
+  //  }
+  //}
+
+
+  //
+  //nodes[0]->Put("test3", "MESSAGE3.1");
+  //nodes[1]->Put("test3", "MESSAGE3.2");
+  //for (;;this_thread::sleep_for(chrono::seconds(1))){
+  //  auto count = N;
+  //  for (auto n : nodes) {
+  //    auto r = n->Get("test3");
+  //    if (r.second){
+  //      printf("Key was set to (%s) on %llu\n",r.first.second.c_str(), n->GetNodeID());
+  //      count--;
+  //    }
+  //  }
+  //  if (count == 0) {
+  //    break;
+  //  }
+  //}
+  //printf("COMPLETE\n");
   return 0;
 }
 
 
+//int main(int argc, char *argv[]) {
+//  std::array<shared_ptr<StellarKV>, N> nodes;
+//  // Create transport layer.
+//  shared_ptr<FakeRPCLayer> rpc = make_shared<FakeRPCLayer>();
+//
+//  // Create nodes.
+//  for (auto i =0; i < N; i++)
+//    nodes[i] = make_shared<StellarKV>(rpc, 0.8);
+//  set<NodeID> s;
+//  for (auto i =0; i < N; i++)
+//    s.insert(nodes[i]->GetNodeID());
+//
+//  for (auto i =0; i < N; i++) {
+//    nodes[i]->AddPeers(s);
+//  }
+//  printf("Need to get %i nodes to agree out of %i nodes\n",nodes[0]->GetThreshold(), N);
+//  nodes[0]->Put("test", "MESSAGE");
+//  for (;;this_thread::sleep_for(chrono::seconds(1))){
+//    auto count = N;
+//    for (auto n : nodes) {
+//      auto r = n->Get("test");
+//      if (r.second){
+//        printf("Key was set to (%s) on %llu\n",r.first.second.c_str(), n->GetNodeID());
+//        count--;
+//      }
+//    }
+//    if (count == 0) {
+//      break;
+//    }
+//  }
+//
+//  //nodes[0]->Put("test2", "MESSAGE2");
+//  nodes[1]->Put("test2", "MESSAGE2");
+//  for (;;this_thread::sleep_for(chrono::seconds(1))){
+//    auto count = N;
+//    for (auto n : nodes) {
+//      auto r = n->Get("test2");
+//      if (r.second){
+//        printf("Key was set to (%s) on %llu\n",r.first.second.c_str(), n->GetNodeID());
+//        count--;
+//      }
+//    }
+//    if (count == 0) {
+//      break;
+//    }
+//  }
+//
+//
+//  
+//  nodes[0]->Put("test3", "MESSAGE3.1");
+//  nodes[1]->Put("test3", "MESSAGE3.2");
+//  for (;;this_thread::sleep_for(chrono::seconds(1))){
+//    auto count = N;
+//    for (auto n : nodes) {
+//      auto r = n->Get("test3");
+//      if (r.second){
+//        printf("Key was set to (%s) on %llu\n",r.first.second.c_str(), n->GetNodeID());
+//        count--;
+//      }
+//    }
+//    if (count == 0) {
+//      break;
+//    }
+//  }
+//  printf("COMPLETE\n");
+//  return 0;
+//}
 
 
 

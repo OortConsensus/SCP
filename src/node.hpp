@@ -54,6 +54,7 @@ namespace DISTPROJ {
 
     void Start();
     SlotNum Propose(std::string value);
+    void Propose(std::string value, SlotNum sn);
     void SendMessage(std::shared_ptr<Message> msg);
     void SendMessageTo(std::shared_ptr<Message> msg, NodeID i);
     bool ReceiveMessage(std::shared_ptr<Message>* msg);
