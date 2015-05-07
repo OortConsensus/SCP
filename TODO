@@ -1,15 +1,11 @@
 TODO:
 	Finish Consensus Stuff:
-<<<<<<< HEAD
 		   - confirmations with quorum set stuff
 		   - creating/sending messages appropriately
 	Proposer Function to make new ballots
              - Verify nonces on receipt of new ballot for first time
                * What are the places to verify>
                * Dynamic difficulty?
-=======
-           - Kick out messages from outside quorum set/only count those
->>>>>>> client
 	Writeup Paper:
             - Polishing up
             - More on the SCP
