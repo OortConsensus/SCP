@@ -184,7 +184,8 @@ std::pair<std::string, bool> LocalNode::View(SlotNum s){
 #ifdef VERBOSE
     printf("VIEW: %s\n", log.at(s)->Phase_s().c_str());
 #endif
-    return std::pair<std::string, bool>(log.at(s)->GetValue(), log.at(s)->GetPhase() == EXTERNALIZE);
+    bool b = log.at(s)->GetPhase() == EXTERNALIZE;
+    return std::pair<std::string, bool>(log.at(s)->GetValue(), b);
   } catch (std::out_of_range){
     return std::pair<std::string, bool>("", false);
   }

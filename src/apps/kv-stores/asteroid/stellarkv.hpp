@@ -22,10 +22,10 @@ namespace DISTPROJ{
         virtual void apply(std::map<std::string, std::pair<Version,std::string>>* log) {};
       };
       class PutMessage : public ActionMessage{
+      public:
         std::string Key;
         std::string Value;
         Version v;
-      public:
         PutMessage() : PutMessage("","",0){};
         PutMessage(std::string k, std::string v, Version ver) : Key(k), Value(v), v(ver){};
         void apply(std::map<std::string, std::pair<Version,std::string>>* log) {
@@ -44,6 +44,10 @@ namespace DISTPROJ{
         };
       };
        
+  inline bool operator==(const PutMessage& lhs, const PutMessage& rhs) {
+    return lhs.Key == rhs.Key && lhs.Value == rhs.Value && lhs.v == rhs.v;
+  }
+
       class StellarKV {
         LocalNode * node;
         std::map<std::string, std::pair<Version, std::string>> log;

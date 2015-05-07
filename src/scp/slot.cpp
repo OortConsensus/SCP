@@ -261,6 +261,9 @@ void Slot::handle(std::shared_ptr<FinishMessage> msg) {
         }
         break;
       }
+#ifdef VERBOSE
+      printf("Externalizing need %d", b_commit);
+#endif
       if (b_commit == 0) {
         phi = EXTERNALIZE;
         break;

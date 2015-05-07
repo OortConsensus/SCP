@@ -1,25 +1,38 @@
 TODO:
 	Finish Consensus Stuff:
+<<<<<<< HEAD
 		   - confirmations with quorum set stuff
 		   - creating/sending messages appropriately
 	Proposer Function to make new ballots
              - Verify nonces on receipt of new ballot for first time
                * What are the places to verify>
                * Dynamic difficulty?
+=======
+           - Kick out messages from outside quorum set/only count those
+>>>>>>> client
 	Writeup Paper:
-            - Polishing
-	State Machine
-	Node/Network:
-		Being able to join at any time/bootstrap
-	Message
+            - Polishing up
+            - More on the SCP
+            - Add a section on Asteroid and Comet and the differences
+    Clean up code
+          - Adding more test cases! Making tests run somewhere else than main (make test?)
+          - Consistently using shared pointers
+          - use more std::blah because apparently using namespace std is bad
+          - DRY up consensus countings
 	FakeRPCLayer -> TCPRPCLayer or UDPRPCLayer or Byzantine RPC Layer
 				 - Resending
 				 - Signing messages
 				 - Forwarding messages
 				 - Peering
 				 - memcpy messages in fakerpc layer!
-	Memory Management
+	Node/Network:
+		Being able to join at any time/bootstrapping :: Low priority because they can just propose a bunch of shit to peers
+	Proposer Function to make new ballots
+             - Verify nonces on receipt of new ballot for first time
+               * What are the places to verify>
+               * Dynamic difficulty?
 
+    
 
         
 
@@ -30,15 +43,18 @@ DONE:
        - only broadcast messages to your peers
        - only let messages from your peers change your state.
 	Proposer Function to make new ballots
-			 - Picking a slot
-			 - Use light HashCash for random timeouts?
+        - Picking a slot
+        - Use light HashCash for random timeouts?
+        - confirmations with quorum set stuff
+        - creating/sending messages appropriately
+        - incrementing ballots?
 	Writeup Paper:
 			- Journey into Stellar/Our summary of how the protocol works
 			- Design overview
                 + Why we chose C++
 				+ What we got done/what is left
 				+ paste in consensus critical code
-	State Machine
+	State Machine(s)
 		  - Key Value store
 			* Append
 	Node/Network:
