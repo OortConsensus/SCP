@@ -18,7 +18,7 @@ Peppercoin\cite{peppercoin}. These systems require trusted third
 parties,
 however, and ultimately were not successful. Bitcoin solved the
 problem of reliance on trusted third parties through its Byzantine
-Fault Tolerant consensus mechanism -- a proof of work based
+Fault Tolerant consensus mechanism --- a proof of work based
 blockchain.
 
 Proof of work is a very costly and energy inefficient means to reaching
@@ -53,7 +53,7 @@ intersection.  Quorum intersection is the notion that all properly
 behaving nodes have connections.  This property is, more formally, the
 notion that you can remove some set of misbehaving nodes and nodes
 which are dependent on them, and if quorum intersection holds the
-nodes will not be partitioned. TODO....
+nodes will not be partitioned. TODO.
 
 
 
@@ -65,7 +65,7 @@ We decided to implement our project in C++. Although neither of us
 knew C++ well a priori, we considered it an important goal for out
 project given that almost all cryptocurrency/consensus systems code is
 written in C++. There were several stumbling blocks to get over, but
-we are both know proficient in C++, which we consider to be a very
+we are both now proficient in C++, which we consider to be a very
 large reward of this project as we are now more comfortable
 contributing code to existing implementations.
 \subsection{Implementation Details}
@@ -154,6 +154,34 @@ Client.Put() appear to have affected all replicas in the same order and have
 at-most-once semantics.
 
 \subsection{Consensus Overview}
+
+Our nodes each maintain the following state for each slot (reference table below and provide citation to table in the paper). Nodes exchange two types of messages: PrepareMessages and FinishMessages. When a node recieves a enough messages of 
+
+TODO : Talk about the messages and state changes.
+
+\begin{table}
+  \centering
+  \begin{tabular}{|p{2cm}|p{10cm}|}
+    \hline
+    \multicolumn{2}{|c|}{State maintained by each node} \\
+    \hline
+    knownNodes & A set of all the other nodes that this nodes knows about. \\
+    quorumSet & The nodes in this nodes quorum slices. \\
+    log & A map from slot ids to slots. \\
+    maxSlot & The highest slot number this nodes has seen maessages for. \\
+    \hline
+    \multicolumn{2}{|c|}{State maintained by nodes for each slot} \\
+    \hline
+    $b$ & Current ballot this node is tyring to prepare or commit. \\
+    $p$ & Highest ballot accepted as prepared, otherwise $0$. \\
+    $p'$ & Highest ballot accepted as prepared that preceeds and contradicts $p$, otherwise $ 0$ \\
+    $c$ & Highest ballot for which this node has voted commit $c$, otherwise $0$. \\
+    $M$ & Map containing the latest message from each node \\ 
+    $\phi$ & Current phase of consensus for the slot: PREPARE, FINISH, or EXTERNALIZE \\
+    \hline
+  \end{tabular}
+\end{table}
+
 \bibliographystyle{abbrv}
 \begingroup
 \raggedright
